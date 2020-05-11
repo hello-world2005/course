@@ -1,0 +1,64 @@
+{
+	// Place your code workspace snippets here. Each snippet is defined under a snippet name and has a scope, prefix, body and 
+	// description. Add comma separated ids of the languages where the snippet is applicable in the scope field. If scope 
+	// is left empty or omitted, the snippet gets applied to all languages. The prefix is what is 
+	// used to trigger the snippet and the body will be expanded and inserted. Possible variables are: 
+	// $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders. 
+	// Placeholders with the same ids are connected.
+	// Example:
+	// "Print to console": {
+	// 	"scope": "javascript,typescript",
+	// 	"prefix": "log",
+	// 	"body": [
+	// 		"console.log('$1');",
+	// 		"$2"
+	// 	],
+	// 	"description": "Log output to console"
+	// }
+	"Debug": {
+		"scope": "cpp",
+		"prefix": "debug",
+		"body": [
+			"#ifdef DEBUG",
+			"#define print(x)                                                            \\",
+			"  cout << \"In function: \" << __FUNCTION__ << \", Line: \" << __LINE__ << \", \" \\",
+			"       << #x << \": \" << x << \" \"",
+			"#define println(x)                                                          \\",
+			"  cout << \"In function: \" << __FUNCTION__ << \", Line: \" << __LINE__ << \", \" \\",
+			"       << #x << \": \" << x << \" \" << endl",
+			"#else",
+			"#define print(x)",
+			"#define println(x)",
+			"#endif"
+		],
+		"description": "Debug"
+	},
+	"Read": {
+		"scope": "cpp",
+		"prefix": "read",
+		"body": [
+			"template <typename T>",
+			"int Read(T& t) {",
+			"  if (typeid(T) == typeid(int))",
+			"    return scanf(\"%d\", &t);",
+			"  if (typeid(T) == typeid(long long))",
+			"    return scanf(\"%lld\", &t);",
+			"  if (typeid(T) == typeid(double))",
+			"    return scanf(\"%lf\", &t);",
+			"}",
+			"",
+			"template <typename T, typename... Args>",
+			"int Read(T& t, Args&... args) {",
+			"  int r = 0;",
+			"  if (typeid(T) == typeid(int))",
+			"    r = scanf(\"%d\", &t);",
+			"  else if (typeid(T) == typeid(long long))",
+			"    r = scanf(\"%lld\", &t);",
+			"  else if (typeid(T) == typeid(double))",
+			"    r = scanf(\"%lf\", &t);",
+			"  return r + Read(args...);",
+			"}"
+		],
+		"description": "Read an int, long long int or double type."
+	}
+}
