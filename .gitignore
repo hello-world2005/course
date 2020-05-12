@@ -1,1 +1,4 @@
 *.exe
+tempCodeRunnerFile.*
+*.in
+*.out
