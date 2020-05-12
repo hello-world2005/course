@@ -10,6 +10,7 @@ int n, q;
 int a[N];
 
 struct FhqTreap {
+  int rub[N * 40], top = 0;
   struct Node {
     int val, rnd;
     int sze;
@@ -17,15 +18,16 @@ struct FhqTreap {
 
     Node() : val(0), rnd(rand()), sze(0) { ch[0] = ch[1] = 0; }
     Node(int _val) : val(_val), rnd(rand()), sze(1) { ch[0] = ch[1] = 0; }
-  } t[N * 40];
+  } t[N * 20];
   int cnt;
 
 #define lc(rt) t[rt].ch[0]
 #define rc(rt) t[rt].ch[1]
 
   int NewNode(int val) {
-    t[++cnt] = Node(val);
-    return cnt;
+    int zzc = top ? rub[top--] : ++cnt;
+    t[zzc] = Node(val);
+    return zzc;
   }
 
   void PushUp(int rt) { t[rt].sze = t[lc(rt)].sze + t[rc(rt)].sze + 1; }
@@ -71,6 +73,7 @@ struct FhqTreap {
     int rt1, rt2, rt3;
     Split(rt, v, rt1, rt3);
     Split(rt1, v - 1, rt1, rt2);
+    rub[++top] = rt2;
     rt2 = Merge(lc(rt2), rc(rt2));
     rt = Merge(Merge(rt1, rt2), rt3);
   }
