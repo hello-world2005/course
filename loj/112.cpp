@@ -2,6 +2,7 @@
 #include <cstdio>
 
 const int N = 1e5 + 10;
+const int K = 2e5 + 10;
 
 int n, k;
 struct Node {
@@ -47,6 +48,7 @@ struct SegmentTree {
   }
 
   void Update(int rt, int p) {
+    // printf("%d %d\n", rt, p);
     if (t[rt].l > p || t[rt].r < p)
       return;
     PushDown(rt);
@@ -70,7 +72,7 @@ struct SegmentTree {
 #undef rc
 } s;
 
-int sum[N];
+int ro[N];
 
 struct FenwickTree {
   int t[N];
@@ -78,14 +80,15 @@ struct FenwickTree {
 #define LowBit(x) (x & -x)
 
   void Add(int a, int b) {
-    for (; a <= k; a += LowBit(a))
-      s.Update(sum[a], b);
+    // printf("%d %d\n", a, b);
+    for (; a <= K; a += LowBit(a))
+      s.Update(ro[a], b);
   }
 
   int Ask(int a, int b) {
     int res = 0;
     for (; a; a -= LowBit(a))
-      res += s.Query(sum[a], b);
+      res += s.Query(ro[a], b);
     return res;
   }
 
@@ -96,8 +99,11 @@ int ans[N], res[N];
 
 int main() {
   scanf("%d%d", &n, &k);
-  for (int i = 1; i <= k; ++i)
-    sum[i] = s.NewNode(1, k);
+  for (int i = 1; i <= K; ++i)
+    ro[i] = s.NewNode(1, K);
+  // for (int i = 1; i <= k + 10; ++i)
+  //   printf("%d ", ro[i]);
+  // printf("\n");
   for (int i = 1; i <= n; ++i)
     scanf("%d%d%d", &f[i].a, &f[i].b, &f[i].c), ++f[i].b;
   std::sort(f + 1, f + n + 1);
