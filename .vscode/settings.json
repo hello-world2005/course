@@ -26,6 +26,7 @@
     "java": "cd $dir && javac $fileName && java $fileNameWithoutExt",
     "c": "cd $dir && gcc $fileName -o $fileNameWithoutExt && $dir$fileNameWithoutExt",
     "cpp": "cd $dir && g++ $fileName -std=c++17 -DDEBUG -Wall -o2 -g -o $fileNameWithoutExt && $dir$fileNameWithoutExt",
+    // "cpp": "cd $dir && clang++ $fileName -std=c++17 -DDEBUG -Wall -o2 -fsanitize=undefined --target=i686-pc-mingw32 -o $fileNameWithoutExt && $dir$fileNameWithoutExt",
     "objective-c": "cd $dir && gcc -framework Cocoa $fileName -o $fileNameWithoutExt && $dir$fileNameWithoutExt",
     "php": "php",
     "python": "python -u",

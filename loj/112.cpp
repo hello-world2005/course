@@ -25,13 +25,16 @@ struct SegmentTree {
     int val;
     int l, r;
     int ch[2];
-  } t[N << 2];
+
+    Node() : val(0), l(0), r(0) { ch[0] = ch[1] = 0; }
+  } t[N * 110];
   int cnt;
 
 #define lc t[rt].ch[0]
 #define rc t[rt].ch[1]
 
   int NewNode(int l, int r) {
+    // printf("%d %d\n", l, r);
     t[++cnt].l = l;
     t[cnt].r = r;
     return cnt;
@@ -48,7 +51,7 @@ struct SegmentTree {
   }
 
   void Update(int rt, int p) {
-    // printf("%d %d\n", rt, p);
+    // printf("%d %d %d %d\n", rt, p, t[rt].l, t[rt].r);
     if (t[rt].l > p || t[rt].r < p)
       return;
     PushDown(rt);
@@ -72,10 +75,10 @@ struct SegmentTree {
 #undef rc
 } s;
 
-int ro[N];
+int ro[K];
 
 struct FenwickTree {
-  int t[N];
+  int t[K];
 
 #define LowBit(x) (x & -x)
 
@@ -87,8 +90,10 @@ struct FenwickTree {
 
   int Ask(int a, int b) {
     int res = 0;
+    // printf("%d %d: ", a, b);
     for (; a; a -= LowBit(a))
       res += s.Query(ro[a], b);
+    // printf("%d\n", res);
     return res;
   }
 
@@ -99,7 +104,7 @@ int ans[N], res[N];
 
 int main() {
   scanf("%d%d", &n, &k);
-  for (int i = 1; i <= K; ++i)
+  for (int i = 1; i < K; ++i)
     ro[i] = s.NewNode(1, K);
   // for (int i = 1; i <= k + 10; ++i)
   //   printf("%d ", ro[i]);
@@ -115,6 +120,9 @@ int main() {
     for (j = i + 1; f[j - 1].a == f[j].a; ++j)
       ans[j] = ft.Ask(f[j].b, f[j].c);
   }
+  // for (int i = 1; i <= n; ++i)
+  //   printf("%d ", ans[i]);
+  // printf("\n");
   for (int i = 1; i <= n; ++i)
     ++res[ans[i]];
   for (int i = 1; i <= n; ++i)
