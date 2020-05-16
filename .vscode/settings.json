@@ -14,7 +14,10 @@
     "vector": "cpp",
     "xstring": "cpp",
     "bitset": "cpp",
-    "climits": "cpp"
+    "climits": "cpp",
+    "*.tcc": "cpp",
+    "list": "cpp",
+    "string": "cpp"
   },
   "editor.tabSize": 2,
   "code-runner.fileDirectoryAsCwd": true,
