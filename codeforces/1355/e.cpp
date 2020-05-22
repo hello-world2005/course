@@ -27,26 +27,12 @@ int Check(int mid) {
 
 signed main() {
   scanf("%lld%lld%lld%lld", &n, &a, &r, &m);
+  int maxn = 0;
   for (int i = 1; i <= n; ++i)
-    scanf("%lld", &h[i]), sum += h[i];
-  // if (a + r <= m) {
-  //   int x = sum % n;
-  //   int y = n - x;
-  //   int m1 = sum / n + (x != 0);
-  //   int m2 = sum / n;
-  //   int s1 = 0, s2 = 0, s;
-  //   for (int i = 1; i <= n; ++i)
-  //     s1 += Abs(h[i] - m1);
-  //   for (int i = 1; i <= n; ++i)
-  //     s2 += Abs(h[i] - m2);
-  //   s = std::min(s1, s2);
-  //   int ans1 = s * (a + r) / 2 + x * r;
-  //   int ans2 = s * (a + r) / 2 + y * a;
-  //   printf("%lld\n", std::min(ans1, ans2));
-  // } else {}
-  int l = 0, r = 1e15, ans;
+    scanf("%lld", &h[i]), maxn = std::max(maxn, h[i]);
+  int l = 0, r = maxn, ans;
   while (l < r) {
-    if (r - l == 1)
+    if (l + 1 == r)
       break;
     int mid = (l + r) >> 1;
     if (Check(mid) > Check(mid + 1))
@@ -54,7 +40,6 @@ signed main() {
     else
       r = mid;
   }
-  int mid = (l + r) >> 1;
   ans = std::min(Check(l), Check(l + 1));
   printf("%lld\n", ans);
   return 0;
