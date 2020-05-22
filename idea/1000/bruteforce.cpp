@@ -38,7 +38,7 @@ signed main() {
       int ans = 0;
       for (int i = l; i <= r; ++i)
         (ans += a[i]) %= MOD;
-      printf("%lld\n", ans);
+      printf("%lld\n", (ans + MOD) % MOD);
     }
     // for (int i = 1; i <= n; ++i)
     //   printf("%lld ", a[i]);
