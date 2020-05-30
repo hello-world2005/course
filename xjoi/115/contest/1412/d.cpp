@@ -1,13 +1,13 @@
 #include <cstdio>
 #include <deque>
-
+ 
 const int N = 3010;
-
+ 
 int n;
 int a[N];
 int sum[N];
 int f[N], h[N];
-
+ 
 int main() {
   scanf("%d", &n);
   for (int i = 1; i <= n; ++i) {
