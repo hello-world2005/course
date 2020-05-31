@@ -4,7 +4,7 @@
 
 const int N = 1e6 + 10;
 
-struct SuffixAutoMaton {
+struct SuffixAutomaton {
   struct Node {
     int ch[26];
     int len, fa;
@@ -101,3 +101,7 @@ int main() {
     Print(1, k);
   return 0;
 }
+
+// akvfeybuemcnruboflzplgsoqaxklypokmtrmunripgzjhnqtofevxvlzuxnsobeawvnqjeyakxkumcpaivxhskjmiygwzlxvimntsluekgywipyslwadglsqjynijmfsyulqhhurnvpyknqvlsbsdtkmrxwdldvl
+// akvfeybuemcnruboflzplgsoqaxklypokmtrmunripgzjhnqtofevxvlzuxnsobeawvnqjeyakxkumcpaivxhskjmiygwzlxvimntsluekgywipyslwadglsqjynijmfsyulqhhurnvpyknqvlsbsdtkmrxwdldvl
+
