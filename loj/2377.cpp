@@ -51,57 +51,60 @@ struct SuffixAutomaton {
 
 int n;
 char s[N << 1];
-int c[N << 1], d[N << 1], v[N << 1], sum[N << 1];
+int c[N << 1], d[N << 1], sze[N << 1];
 
-void TopSort(int t) {
+long long TopSort() {
   for (int i = 1; i <= sam.tot; ++i)
     ++c[sam.a[i].len];
   for (int i = 1; i <= sam.tot; ++i)
     c[i] += c[i - 1];
-  for (int i = sam.tot; i; --i)
+  for (int i = 1; i <= sam.tot; ++i)
     d[c[sam.a[i].len]--] = i;
   for (int i = 1; i <= sam.tot; ++i)
-    v[i] = sam.a[i].sze;
-  for (int i = sam.tot; i; --i)
-    if (t)
-      v[sam.a[d[i]].fa] += v[d[i]];
-    else
-      v[d[i]] = 1;
-  v[1] = 0;
+    sze[i] = sam.a[i].sze;
+  long long res = 0;
   for (int i = sam.tot; i; --i) {
-    sum[d[i]] = v[d[i]];
-    for (int j = 0; j < 26; ++j)
-      sum[d[i]] += sum[sam.a[d[i]].ch[j]];
+    sze[sam.a[d[i]].fa] += sze[d[i]];
+    // printf("%d %d\n", sam.a[i].len, sam.a[sam.a[i].fa].len);
+    res += 1ll * (sam.a[d[i]].len - sam.a[sam.a[d[i]].fa].len) * sze[d[i]] *
+           (n - sze[d[i]]);
   }
-}
-
-void Print(int u, int k) {
-  if (k > v[u]) {
-    k -= v[u];
-    for (int i = 0; i < 26; ++i)
-      if (k <= sum[sam.a[u].ch[i]]) {
-        printf("%c", i + 'a');
-        Print(sam.a[u].ch[i], k);
-        return;
-      } else {
-        k -= sum[sam.a[u].ch[i]];
-      }
-  }
+  return res;
 }
 
 int main() {
   scanf("%s", s + 1);
+  n = strlen(s + 1);
   sam.Build(s);
-  int typ, k;
-  scanf("%d%d", &typ, &k);
-  TopSort(typ);
-  if (k > sum[1])
-    printf("-1\n");
-  else
-    Print(1, k);
+  printf("%lld\n", TopSort());
   return 0;
 }
 
-// akvfeybuemcnruboflzplgsoqaxklypokmtrmunripgzjhnqtofevxvlzuxnsobeawvnqjeyakxkumcpaivxhskjmiygwzlxvimntsluekgywipyslwadglsqjynijmfsyulqhhurnvpyknqvlsbsdtkmrxwdldvl
-// akvfeybuemcnruboflzplgsoqaxklypokmtrmunripgzjhnqtofevxvlzuxnsobeawvnqjeyakxkumcpaivxhskjmiygwzlxvimntsluekgywipyslwadglsqjynijmfsyulqhhurnvpyknqvlsbsdtkmrxwdldvl
-
+// eededeedeedeedde
+// 1
+// 1
+// 1
+// 1
+// 1
+// 1
+// 1
+// 1
+// 1
+// 2
+// 1
+// 2
+// 1
+// 2
+// 1
+// 3
+// 3
+// 3
+// 4
+// 4
+// 4
+// 5
+// 5
+// 10
+// 6
+// 16
+// 2030
