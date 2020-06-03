@@ -15,50 +15,50 @@
 	// 	],
 	// 	"description": "Log output to console"
 	// }
-	"Debug": {
-		"scope": "cpp",
-		"prefix": "debug",
-		"body": [
-			"#ifdef DEBUG",
-			"#define print(x)                                                            \\",
-			"  cout << \"In function: \" << __FUNCTION__ << \", Line: \" << __LINE__ << \", \" \\",
-			"       << #x << \": \" << x << \" \"",
-			"#define println(x)                                                          \\",
-			"  cout << \"In function: \" << __FUNCTION__ << \", Line: \" << __LINE__ << \", \" \\",
-			"       << #x << \": \" << x << \" \" << endl",
-			"#else",
-			"#define print(x)",
-			"#define println(x)",
-			"#endif"
-		],
-		"description": "Debug"
-	},
-	"Read": {
-		"scope": "cpp",
-		"prefix": "read",
-		"body": [
-			"template <typename T>",
-			"int Read(T& t) {",
-			"  if (typeid(T) == typeid(int))",
-			"    return scanf(\"%d\", &t);",
-			"  if (typeid(T) == typeid(long long))",
-			"    return scanf(\"%lld\", &t);",
-			"  if (typeid(T) == typeid(double))",
-			"    return scanf(\"%lf\", &t);",
-			"}",
-			"",
-			"template <typename T, typename... Args>",
-			"int Read(T& t, Args&... args) {",
-			"  int r = 0;",
-			"  if (typeid(T) == typeid(int))",
-			"    r = scanf(\"%d\", &t);",
-			"  else if (typeid(T) == typeid(long long))",
-			"    r = scanf(\"%lld\", &t);",
-			"  else if (typeid(T) == typeid(double))",
-			"    r = scanf(\"%lf\", &t);",
-			"  return r + Read(args...);",
-			"}"
-		],
-		"description": "Read an int, long long int or double type."
+	// "Debug": {
+	// 	"scope": "cpp",
+	// 	"prefix": "debug",
+	// 	"body": [
+	// 		"#ifdef DEBUG",
+	// 		"#define print(x)                                                            \\",
+	// 		"  cout << \"In function: \" << __FUNCTION__ << \", Line: \" << __LINE__ << \", \" \\",
+	// 		"       << #x << \": \" << x << \" \"",
+	// 		"#define println(x)                                                          \\",
+	// 		"  cout << \"In function: \" << __FUNCTION__ << \", Line: \" << __LINE__ << \", \" \\",
+	// 		"       << #x << \": \" << x << \" \" << endl",
+	// 		"#else",
+	// 		"#define print(x)",
+	// 		"#define println(x)",
+	// 		"#endif"
+	// 	],
+	// 	"description": "Debug"
+	// },
+	// "Read": {
+	// 	"scope": "cpp",
+	// 	"prefix": "read",
+	// 	"body": [
+	// 		"template <typename T>",
+	// 		"int Read(T& t) {",
+	// 		"  if (typeid(T) == typeid(int))",
+	// 		"    return scanf(\"%d\", &t);",
+	// 		"  if (typeid(T) == typeid(long long))",
+	// 		"    return scanf(\"%lld\", &t);",
+	// 		"  if (typeid(T) == typeid(double))",
+	// 		"    return scanf(\"%lf\", &t);",
+	// 		"}",
+	// 		"",
+	// 		"template <typename T, typename... Args>",
+	// 		"int Read(T& t, Args&... args) {",
+	// 		"  int r = 0;",
+	// 		"  if (typeid(T) == typeid(int))",
+	// 		"    r = scanf(\"%d\", &t);",
+	// 		"  else if (typeid(T) == typeid(long long))",
+	// 		"    r = scanf(\"%lld\", &t);",
+	// 		"  else if (typeid(T) == typeid(double))",
+	// 		"    r = scanf(\"%lf\", &t);",
+	// 		"  return r + Read(args...);",
+	// 		"}"
+	// 	],
+	// 	"description": "Read an int, long long int or double type."
 	}
 }
