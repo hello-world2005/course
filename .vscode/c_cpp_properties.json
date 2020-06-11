@@ -4,7 +4,8 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
-                "C:/MinGw/include/**"
+                "C:/MinGw/include/**",
+                "C:/MinGW/lib/gcc/mingw32/8.2.0/include/c++/**"
             ],
             "compilerPath": "C:/MinGW/bin/g++",
             "cStandard": "c11",
