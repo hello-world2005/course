@@ -1,48 +1,58 @@
 #include <cstdio>
-#include <cstring>
-
-#define int long long
 
 const int N = 1e5 + 10;
 
-int f[N], s[N], d[N];
+int sze[N];
+bool cut[N];
 
 int Find(int u) {
-  return u == f[u] ? u : Find(f[u]);
+  while (!cut[u] && u > 1)
+    u >>= 1;
+  return sze[u];
 }
 
-signed main() {
+int main() {
   int T;
-  scanf("%lld", &T);
+  scanf("%d", &T);
   while (T--) {
     int n, m;
-    scanf("%lld%lld", &n, &m);
-    int now = n * (n - 1) / 2;
-    f[1] = 1;
-    s[1] = n;
-    for (int i = 2; i <= n; ++i)
-      f[i] = i / 2;
-    // printf("%d\n", s[6]);
-    s[2] = 5, s[3] = s[4] = 3, s[5] = s[6] = s[7] = s[8] = s[9] = 1;
+    scanf("%d%d", &n, &m);
+    for (int i = n; i >= 1; --i) {
+      ++sze[i];
+      sze[i >> 1] += sze[i];
+    }
+    int ans = n * (n - 1) / 2;
     while (m--) {
-      int q;
-      scanf("%lld", &q);
-      int u = q, v = q / 2;
-      if (f[u] == v) {
-        v = Find(v);
-        f[u] = u;
-        s[v] -= (s[u] - d[u]);
-        d[v] += (s[u] - d[u]);
-        now -= (s[u] - d[u]) * s[v];
-        printf("%lld %lld %lld %lld\n", s[u], d[u], s[v], d[v]);
+      int u;
+      scanf("%d", &u);
+      if (cut[u]) {
+        int x = Find(u), y = Find(u >> 1);
+        ans -= x * (x - 1) / 2 + y * (y - 1) / 2;
+        cut[u] = false;
+        for (int x = u; x; x >>= 1) {
+          sze[x] = 1;
+          for (int y = x << 1; y <= (x << 1 | 1); ++y)
+            if (y <= n)
+              if (!cut[y])
+                sze[x] += sze[y];
+        }
+        x = Find(u);
+        ans += x * (x - 1) / 2;
+      } else {
+        int x = Find(u), y;
+        ans -= x * (x - 1) / 2;
+        cut[u] = true;
+        for (int x = u; x; x >>= 1) {
+          sze[x] = 1;
+          for (int y = x << 1; y <= (x << 1 | 1); ++y)
+            if (y <= n)
+              if (!cut[y])
+                sze[x] += sze[y];
+        }
+        x = Find(u), y = Find(u >> 1);
+        ans += x * (x - 1) / 2 + y * (y - 1) / 2;
       }
-      // else {
-      //   f[u] = v;
-      //   s[v] += (s[u] - d[u]);
-      //   d[v] -= (s[u] - d[u]);
-      //   now += (s[u] - d[u]) * (s[v] - d[v]);
-      // }
-      printf("%lld\n", now);
+      printf("%d\n", ans);
     }
   }
   return 0;
