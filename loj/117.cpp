@@ -95,17 +95,17 @@ signed main() {
     else if (d[i] < 0)
       AddEdge(i, T, -d[i]), AddEdge(T, i, 0);
   }
-  AddEdge(t, s, 0, INF);
   Dinic(S, T);
+  AddEdge(t, s, 0, INF);
   // printf("qwq\n");
   // system("pause");
+  Dinic(S, T);
   bool full = true;
   for (int i = head[S]; i; i = e[i].nxt)
     if (e[i].w > 0) {
       full = false;
       break;
     }
-  Dinic(S, T);
   if (full) {
     printf("%lld\n", e[edge_cnt].w);
   } else {
