@@ -60,5 +60,15 @@
 	// 		"}"
 	// 	],
 	// 	"description": "Read an int, long long int or double type."
+	// }
+	"debug": {
+		"scope": "cpp",
+		"prefix": "log",
+		"body": [
+			"#ifdef DEBUG",
+			"$1",
+			"#endif"
+		],
+		"description": "add debug"
 	}
 }
