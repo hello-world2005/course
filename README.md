@@ -3,11 +3,11 @@ Training program
 
 任务计划：
 
-SP375 QTREE - Query on a tree
+~~SP375 QTREE - Query on a tree~~
 
 SP16549 QTREE6 - Query on a tree VI
 
-P2147 SDOI2008 洞穴勘测
+~~P2147 SDOI2008 洞穴勘测~~
 
 CodeChef PREFIXOR Prefix Xor
 
