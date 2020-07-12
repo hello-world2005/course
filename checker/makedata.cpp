@@ -2,17 +2,18 @@
 #include <cstdlib>
 #include <ctime>
 
+int Random(int l, int r) {
+  return rand() % (r - l + 1) + l;
+}
+
 int main() {
   srand(time(NULL));
-  int n = rand() % 10 + 1, q = rand() % 10 + 1;
-  printf("%d %d\n", n, q);
-  for (int i = 1; i <= n; ++i)
-    printf("%d ", rand() % 10 + 1);
-  printf("\n");
-  for (int i = 1; i < n; ++i)
-    printf("%d ", rand() % i + 1);
-  printf("\n");
-  while (q--)
-    printf("%d %d\n", rand() % n + 1, rand() % 10 + 1);
+  int n = Random(1, 10), m = Random(1, 100);
+  printf("%d\n", n);
+  for (int i = 2; i <= n; ++i)
+    printf("%d %d\n", i, Random(1, i - 1));
+  printf("%d\n", m);
+  while (m--)
+    printf("%d %d\n", Random(0, 1), Random(1, n));
   return 0;
 }
