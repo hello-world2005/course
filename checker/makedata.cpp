@@ -3,17 +3,14 @@
 #include <ctime>
 
 int Random(int l, int r) {
-  return rand() % (r - l + 1) + l;
+  return rand() * rand() % (r - l + 1) + l;
 }
 
 int main() {
   srand(time(NULL));
-  int n = Random(1, 10), m = Random(1, 100);
-  printf("%d\n", n);
-  for (int i = 2; i <= n; ++i)
-    printf("%d %d\n", i, Random(1, i - 1));
-  printf("%d\n", m);
+  int n = Random(1, 114514), m = Random(1, 114514);
+  printf("%d %d\n", n, m);
   while (m--)
-    printf("%d %d\n", Random(0, 1), Random(1, n));
+    printf("%d %d %d\n", Random(1, 2), Random(1, n), Random(1, n));
   return 0;
 }

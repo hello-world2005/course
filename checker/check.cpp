@@ -4,8 +4,8 @@
 int main() {
   int cnt = 0;
   while (true) {
-    // system("makedata > .in");
-    // printf("data ok\n");
+    system("makedata > .in");
+    printf("data ok\n");
     system("a < .in > a.out");
     printf("a\n");
     system("b < .in > b.out");

@@ -10,7 +10,7 @@ int n, m;
 std::unordered_set<int> e[N];
 std::unordered_map<int, int> lnk;
 int cnt;
-std::bitset<N> bs[400];
+std::bitset<N> bs[350];
 
 int main() {
   scanf("%d%d", &n, &m);
@@ -19,7 +19,7 @@ int main() {
     scanf("%d%d%d", &opt, &u, &v);
     if (opt == 1) {
       e[u].insert(v), e[v].insert(u);
-      if (e[u].size() >= 350) {
+      if (e[u].size() > 350) {
         if (!lnk[u]) {
           lnk[u] = ++cnt;
           for (auto i : e[u])
@@ -28,7 +28,7 @@ int main() {
           bs[lnk[u]][v] = true;
         }
       }
-      if (e[v].size() >= 350) {
+      if (e[v].size() > 350) {
         if (!lnk[v]) {
           lnk[v] = ++cnt;
           for (auto i : e[v])
@@ -52,7 +52,8 @@ int main() {
           printf("No\n");
         ed:;
         } else {
-          if ((bs[lnk[u]] & bs[lnk[v]]).count())
+          std::bitset<N> t = (bs[lnk[u]] & bs[lnk[v]]);
+          if (t.count())
             printf("Yes\n");
           else
             printf("No\n");
