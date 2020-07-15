@@ -1,23 +1,14 @@
 #include <cstdio>
 
-const int N = 1e5 + 10;
-
-double a[N], ans[N];
+const int MOD = 1e9 + 7;
 
 int main() {
   int T;
   scanf("%d", &T);
   while (T--) {
-    int n, k;
-    double sum = 0;
-    scanf("%d%d", &n, &k);
-    for (int i = 1; i <= n; ++i)
-      scanf("%lf", &a[i]), sum += a[i];
-    for (int i = 1; i <= n; ++i)
-      ans[i] = a[i] + 1.0 * a[i] / sum * k;
-    for (int i = 1; i <= n; ++i)
-      printf("%.6f ", ans[i]);
-    printf("\n");
+    int n;
+    scanf("%d", &n);
+    printf("%d\n", int(1ll * n * (n - 1) % MOD * (n - 2) % MOD));
   }
   return 0;
 }
