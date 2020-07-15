@@ -23,9 +23,6 @@ struct Card {
 
   int Pip() { return pip; }
   int Suit() { return suit; }
-  bool PipEqual(const Card& rhs) const { return pip == rhs.pip; }
-  bool SuitEqual(const Card& rhs) const { return suit == rhs.suit; }
-  bool Equal(const Card& rhs) const { return PipEqual(rhs) && SuitEqual(rhs); }
 
   void Read() {
     auto IsSuit = [&](char c) {
@@ -54,24 +51,12 @@ void Input() {
       initial.insert(player2[0]), initial.insert(player2[1]);
   initial.insert(community[0]), initial.insert(community[1]),
       initial.insert(community[2]);
-  // printf("%d %d\n", player1[0].pip, player1[0].suit);
-  // printf("%d %d\n", player1[1].pip, player1[1].suit);
-  // printf("%d %d\n", player2[0].pip, player2[0].suit);
-  // printf("%d %d\n", player2[1].pip, player2[1].suit);
-  // printf("%d %d\n", community[0].pip, community[0].suit);
-  // printf("%d %d\n", community[1].pip, community[1].suit);
-  // printf("%d %d\n", community[2].pip, community[2].suit);
 }
 
-struct Situation {
-  std::vector<Card> c;
-
-  Situation() { c.clear(); }
-  Situation(std::vector<Card> _c) { c = _c; }
-};
+typedef std::vector<Card> Situation;
 
 int HandType(Situation player) {
-  std::vector<Card> c(player.c);
+  std::vector<Card> c(player);
   std::sort(c.begin(), c.end());
 
   auto IsStraight = [=](std::vector<Card> c) {
@@ -146,7 +131,7 @@ bool Win(Situation pl1, Situation pl2) {
     return true;
   if (handtype_pl1 > handtype_pl2)
     return false;
-  std::vector<Card> c1(pl1.c), c2(pl2.c);
+  std::vector<Card> c1(pl1), c2(pl2);
   std::sort(c1.begin(), c1.end());
   std::sort(c2.begin(), c2.end());
 
@@ -272,17 +257,6 @@ Situation FindBest(std::vector<Situation> pl) {
 }
 
 std::pair<int, int> Calc(Situation pl1, Situation pl2) {
-  // if (!Win(pl1, pl2)) {
-  //   printf("%d %d\n", HandType(pl1), HandType(pl2));
-  //   auto b = pl1.c;
-  //   for (auto i : b)
-  //     printf("%d %d\n", i.suit, i.pip);
-  //   printf("\n");
-  //   b = pl2.c;
-  //   for (auto i : b)
-  //     printf("%d %d\n", i.suit, i.pip);
-  //   printf("\n==========\n");
-  // }
   return std::make_pair(Win(pl1, pl2), 1);
 }
 
@@ -370,7 +344,6 @@ void Output(std::pair<int, int> ans) {
     return a;
   };
 
-  // printf("%d %d\n", ans.first, ans.second);
   int gcd = Gcd(ans.first, ans.second);
   printf("%d/%d\n", ans.first / gcd, ans.second / gcd);
 }
