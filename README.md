@@ -16,3 +16,5 @@ BZOJ2579 一个动态树好题
 AT2149 すぬけ君の塗り絵 2 / Snuke's Coloring 2
 
 LOJ 2049. 「HNOI2016」网络
+
+$\sum_{i=1}^n\sum_{j=1}^i\sum_{k=1}^i [(i,j),(i,k)]$ 
