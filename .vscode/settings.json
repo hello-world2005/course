@@ -135,5 +135,5 @@
   "C_Cpp.default.defines": [
     "DEBUG"
   ],
-  "editor.fontFamily": "monospace"
+  "editor.fontFamily": "\"monospace\""
 }
