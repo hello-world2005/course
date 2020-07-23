@@ -48,6 +48,7 @@ struct LeftistTree {
   int Push(int x, int val) {
     ch[++cnt][0] = ch[cnt][1] = dis[cnt] = 0;
     fa[cnt] = fa2[cnt] = cnt;
+    v[cnt] = val;
     return Merge(x, cnt);
   }
 
@@ -71,7 +72,7 @@ struct LeftistTree {
     int res = v[x];
     while (x != fa2[x])
       x = fa2[x], res += tag[x];
-    printf("> %d\n", res);
+    // printf("> %d\n", res);
     return res;
   }
 
@@ -97,6 +98,11 @@ struct LeftistTree {
       dis[f2] = dis[ch[f2][1]] + 1;
       f2 = fa2[f2];
     }
+    if (dis[ch[f2][0]] < dis[ch[f2][1]])
+      std::swap(ch[f2][0], ch[f2][1]);
+    if (dis[f2] == dis[ch[f2][1]] + 1)
+      return t;
+    dis[f2] = dis[ch[f2][1]] + 1;
     return t;
   }
 
@@ -125,7 +131,7 @@ int main() {
     lt1.v[i] = lt2.v[i] = a[i];
     lt1.fa[i] = lt1.fa2[i] = lt2.fa[i] = lt2.fa2[i] = i;
   }
-  lt1.cnt = lt2.cnt = 2;
+  lt1.cnt = lt2.cnt = n;
   int rt = lt2.Build(n);
   int tag = 0;
   int q;
@@ -136,7 +142,7 @@ int main() {
     scanf("%s", opt);
     if (opt[0] == 'U') {
       scanf("%d%d", &x, &y);
-      x = lt1.Find(x), y = lt2.Find(y);
+      x = lt1.Find(x), y = lt1.Find(y);
       if (x != y)
         rt = lt2.Del(lt1.Merge(x, y) == x ? y : x);
     } else if (opt[0] == 'A') {
@@ -153,11 +159,11 @@ int main() {
         scanf("%d%d", &x, &y);
         x = lt1.Find(x);
         lt1.v[x] += y, lt1.tag[x] += y;
-        printf("x: %d\n", x);
+        // printf("x: %d\n", x);
         rt = lt2.Del(x);
         lt2.v[x] = lt1.v[x], lt2.fa[x] = lt2.fa2[x] = x;
         rt = lt2.Merge(rt, x);
-        printf("%d\n", rt);
+        // printf("%d\n", rt);
       } else {
         scanf("%d", &x);
         tag += x;
@@ -174,6 +180,10 @@ int main() {
         printf("%d\n", lt2.v[rt] + tag);
       }
     }
+    // puts("debug");
+    // for (int j = 1; j <= n; ++j)
+    //   printf("%d ", lt1.Get(j) + tag);
+    // puts("");
   }
   return 0;
 }

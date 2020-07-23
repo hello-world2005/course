@@ -29,8 +29,8 @@ struct zps
         while(x!=tree[x].fa2){
             x=tree[x].fa2;
             sum+=tree[x].lz;
-        }
         printf("> %d\n", sum);
+        }
         return sum;
     }
     int find(int x)

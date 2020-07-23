@@ -1,18 +1,19 @@
 #include <algorithm>
+#include <bitset>
 #include <cstdio>
 
 const int N = 1e6 + 10;
 const int MOD = 1e9 + 7;
 
-bool vis[N];
+std::bitset<N> vis;
 int pri[N / 10], cnt;
 int maxn;
 
 void Sieve() {
-  for (int i = 2; i < maxn; ++i) {
+  for (int i = 2; i <= maxn; ++i) {
     if (!vis[i])
       pri[++cnt] = i;
-    for (int j = 1; j <= cnt && i * pri[j] < N; ++j) {
+    for (int j = 1; j <= cnt && i * pri[j] <= maxn; ++j) {
       vis[i * pri[j]] = true;
       if (i % pri[j] == 0)
         break;
@@ -67,7 +68,8 @@ int main() {
       r = std::min(n / (n / l), m / (m / l));
       // printf("%d %d\n", f[r], invf[l - 1]);
       res = (1ll * res *
-             FastPow(1ll * f[r] * invf[l - 1] % MOD, 1ll * (n / l) * (m / l) % (MOD - 1))) %
+             FastPow(1ll * f[r] * invf[l - 1] % MOD,
+                     1ll * (n / l) * (m / l) % (MOD - 1))) %
             MOD;
     }
     printf("%d\n", res);
