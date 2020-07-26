@@ -1,33 +1,21 @@
+#include <bitset>
 #include <cstdio>
-#include <algorithm>
 #include <iostream>
-    using namespace std;
-    int a[200001],n,t;
-    int fan(int aa,int b,int c)
-    {
-    	if(aa>=b)return 1;
-    	if(c>min(a[aa],a[b]))return 0;
-    	if(a[aa]<a[b])
-    	return fan(aa+1,b,a[aa]);
-    	else
-    	return fan(aa,b-1,a[b]);
-    }
-    int main(){
-        cin>>t;
-        while(t--){ 
-        int az=1;
-    	cin>>n;
-    	for(int i=1;i<=n;i++)cin>>a[i];
-    	int l=1,y=n;
-    	while(l<y)
-    	{
-    		int mid=(l+y)/2;
-    		if(fan(mid,n,0))
-    		y=mid;
-    		else
-    		l=mid+1;
-    	}
-    	cout<<l-1<<endl;
-    	}
-    	return 0;
-    }
+
+int main() {
+  std::bitset<30000> bs;
+  int n = 30000;
+  int m;
+  scanf("%d", &m);
+  for (int i = 0, x; i < m; ++i)
+    scanf("%d", &x), bs.set(x);
+  bs <<= 10;
+  bs >>= 15;
+  bs <<= 12;
+  bs >>= 124;
+  bs <<= 1926;
+  for (int i = 0; i < n; ++i)
+    printf("%d", bs.test(i));
+  // std::cout << bs << std::endl;
+  return 0;
+}
