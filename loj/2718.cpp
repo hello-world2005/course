@@ -158,6 +158,8 @@ void Init() {
 }
 
 int main() {
+  freopen("return.in", "r", stdin);
+  freopen("return.out", "w", stdout);
   int T;
   scanf("%d", &T);
   while (T--) {
