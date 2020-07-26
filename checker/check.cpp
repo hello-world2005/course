@@ -17,7 +17,7 @@ int main() {
     system("b < .in > b.out");
     ed = clock();
     printf("b %.3lfs\n", 1.0 * (ed - st) / CLOCKS_PER_SEC);
-    if (system("fc b.out a.out")) {
+    if (system("fc a.out b.out")) {
       printf("Wa %d\n", ++cnt);
       break;
     }

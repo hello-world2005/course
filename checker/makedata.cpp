@@ -9,11 +9,9 @@ int Random(int l, int r) {
 
 int main() {
   srand(time(0));
-  printf("1\n");
-  int n = Random(1, 2e5);
+  int n = Random(1, 30000);
   printf("%d\n", n);
   for (int i = 1; i <= n; ++i)
-    printf("%d ", Random(1, 2e5));
-  printf("\n");
+    printf("%d\n", Random(0, n - 1));
   return 0;
 }
