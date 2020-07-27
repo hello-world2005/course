@@ -1,8 +1,7 @@
-#include <cstdio>
 #include <cstring>
 #include <vector>
 
-template<int N>
+template <int N>
 struct Bitset {
   int M = (N & 0x3f) ? ((N >> 6) + 1) : (N >> 6);
   unsigned long long a[M];
@@ -21,12 +20,34 @@ struct Bitset {
   std::vector<int> Every() {
     std::vector<int> res;
     for (int i = 0; i < M; ++i)
-      for (int j = a[i]; j; j -= (1 << __builtin_ctzll(j)))
-        res.push_back((i << 6) | j);
+      for (ull j = a[i]; j; j -= (1 << __builtin_ctzll(j)))
+        res.push_back((i << 6) | __builtin_ctzll(j));
     return res;
   }
+  bool All() {
+    bool res = true;
+    for (int i = 0; i < M; ++i)
+      if (__builtin_popcountll(i) != 0x3f)
+        return false;
+    return true;
+  }
+  bool Any() {
+    bool res = false;
+    for (int i = 0; i < M; ++i)
+      if (__builtin_popcountll(i))
+        return true;
+    return false;
+  }
+  bool None() {
+    for (int i = 0; i < M; ++i)
+      if (__builtin_popcountll(i))
+        return false;
+    return true;
+  }
+  void Flip(int x) {
+    a[x >> 6] ^= (1 << (x & 0x3f));
+  }
 
-  bool &operator[](const int k) { return a[x >> 6] >> (x & 0x3f) & 1; }
   Bitset operator~() {
     Bitset res;
     for (int i = 0; i < M; ++i)

@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 #include<cstdio>
 #include<algorithm>
 using namespace std;
@@ -119,4 +117,3 @@ int main(){
   }
   return 0;
 }
->>>>>>> 2da274d5e06f2568691d40b2728123578a765d18
