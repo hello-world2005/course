@@ -16,3 +16,6 @@
 !*.docx
 !*.tex
 !*.ipynb
+
+@#$%^&*().cpp
+tmp.cpp
