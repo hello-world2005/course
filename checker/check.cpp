@@ -7,17 +7,17 @@ int main() {
   clock_t st = clock();
   clock_t ed = clock();
   while (true) {
-    system("makedata > .in");
+    system("./makedata > .in");
     printf("data ok\n");
     st = clock();
-    system("a < .in > a.out");
+    system("./a < .in > a.out");
     ed = clock();
     printf("a %.3lfs\n", 1.0 * (ed - st) / CLOCKS_PER_SEC);
     st = clock();
-    system("b < .in > b.out");
+    system("./b < .in > b.out");
     ed = clock();
     printf("b %.3lfs\n", 1.0 * (ed - st) / CLOCKS_PER_SEC);
-    if (system("fc a.out b.out")) {
+    if (system("diff a.out b.out")) {
       printf("Wa %d\n", ++cnt);
       break;
     }

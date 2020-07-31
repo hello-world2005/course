@@ -7,17 +7,22 @@ const int K = 23;
 
 int a[N];
 int st[N][K];
+int lg2[N];
 
 void Build(int n) {
   for (int i = 1; i <= n; ++i)
     st[i][0] = a[i];
+  lg2[0] = -1;
+  for (int i = 1; i <= n; ++i)
+    lg2[i] = lg2[i >> 1] + 1;
   for (int j = 1; j < K; ++j)
     for (int i = 1; i + (1 << j) - 1 <= n; ++i)
       st[i][j] = std::max(st[i][j - 1], st[i + (1 << (j - 1))][j - 1]);
 }
 
 int Query(int l, int r) {
-  int len = log2(r - l + 1);
+  // int len = log2(r - l + 1);
+  int len = lg2[r - l + 1];
   return std::max(st[l][len], st[r - (1 << len) + 1][len]);
 }
 

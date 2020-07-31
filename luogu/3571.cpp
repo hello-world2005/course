@@ -2,6 +2,7 @@
 #include <cmath>
 #include <cstdio>
 #include <deque>
+#include <vector>
 
 const int N = 1e6 + 10;
 
@@ -32,8 +33,8 @@ void Dfs(int u, int fa) {
   }
 }
 
-int Slope(int x, int y) {
-  return (s[x] - s[y]) / (x - y);
+double Slope(int x, int y) {
+  return 1.0 * (s[x] - s[y]) / (x - y);
 }
 
 int main() {
@@ -52,18 +53,18 @@ int main() {
     ++cnt[dep[i]], maxdep = std::max(maxdep, dep[i]);
   for (int i = maxdep; i >= 0; --i)
     s[i] = s[i + 1] + cnt[i + 1];
-  std::deque<int> q;
-  // q.push_back(0);
+  std::vector<int> q;
+  q.resize(N);
+  int hd = 0, tl = 0;
   for (int i = 1; i <= maxdep; ++i) {
-    while (q.size() >= 2 &&
-           Slope(q[q.size() - 2], q[q.size() - 1] <= Slope(q[q.size() - 1], i)))
-      q.pop_back();
-    q.push_back(i);
+    while (hd < tl && Slope(q[tl - 1], q[tl]) <= Slope(q[tl], i))
+      --tl;
+    q[++tl] = i;
   }
   for (int i = 1; i <= maxque; ++i) {
-    while (q.size() >= 2 && i * q[0] + s[q[0]] <= i * q[1] + s[q[1]])
-      q.pop_front();
-    dp[i] = q[0] + ceil(1.0 * s[q[0]] / i);
+    while (hd < tl && i * q[hd] + s[q[hd]] <= i * q[hd + 1] + s[q[hd + 1]])
+      ++hd;
+    dp[i] = q[hd] + ceil(1.0 * s[q[hd]] / i);
   }
   for (int i = 1; i <= m; ++i)
     printf("%d ", dp[que[i]]);
