@@ -36,9 +36,10 @@ int main() {
   std::vector<double> _slope;
   for (auto i : slope) {
     if (qwq == 0 && i.second == 1)
-      qwq = 1, _slope.push_back(i.first);
+       _slope.push_back(i.first);
     if (qwq == 1 && i.second == -1)
-      qwq = 0, _slope.push_back(i.first);
+      _slope.push_back(i.first);
+    qwq += i.second;
   }
   std::sort(_slope.begin(), _slope.end());
   int l = 0, r = _slope.size() - 1;
