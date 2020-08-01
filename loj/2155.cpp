@@ -28,9 +28,9 @@ void Tarjan(int u) {
     int v = e[i].v;
     if (!dfn[v]) {
       Tarjan(v);
-      low[u] = std::min(low[u], dfn[v]);
-    } else if (instk[v]) {
       low[u] = std::min(low[u], low[v]);
+    } else if (instk[v]) {
+      low[u] = std::min(low[u], dfn[v]);
     }
   }
   if (dfn[u] == low[u]) {
