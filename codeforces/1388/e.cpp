@@ -31,6 +31,15 @@ int main() {
         slope.push_back(
             std::make_pair(1.0 * (l[j].xr - l[i].xl) / (l[i].y - l[j].y), -1));
       }
+  if (slope.size() == 0) {
+    int ml = 1e6, mr = -1e6;
+    for (int i = 1; i <= n; ++i) {
+      ml = std::min(ml, l[i].xl);
+      mr = std::max(mr, l[i].xr);
+    }
+    printf("%d\n", mr - ml);
+    return 0;
+  }
   std::sort(slope.begin(), slope.end());
   int qwq = 0;
   std::vector<double> _slope;
