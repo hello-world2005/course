@@ -20,3 +20,7 @@ LOJ 2049. 「HNOI2016」网络
 $\sum_{i=1}^n\sum_{j=1}^i\sum_{k=1}^i [(i,j),(i,k)]$ 
 
 Codeforces 708C
+
+LOJ 2155
+
+http://wys.life/2020-08-NOI-WC-Lecture
