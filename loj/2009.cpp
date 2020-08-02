@@ -71,7 +71,7 @@ signed main() {
   int ans = INF;
   for (int i = 1; i <= n; ++i) {
     int res = dp1[i][1];
-    for (int j = Pat(i, 1), qwq = i; ~j; j = Pat(j, 1), qwq = Pat(qwq, 1)) {
+    for (int j = Pat(i, 1), qwq = i; ~j; qwq = j, j = Pat(j, 1)) {
       if (Another(qwq, 1) <= n)
         res += dis[(Another(qwq, 1))][1] * a[Another(qwq, 1)] +
                dp1[Another(qwq, 1)][2];
