@@ -3,7 +3,7 @@
 #include <unordered_set>
 
 const int N = 2e5 + 10;
-const int BASE = 100;
+const int BASE = 631;
 const int MOD1 = 402653189;
 const int MOD2 = 805306457;
 
