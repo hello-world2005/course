@@ -24,3 +24,5 @@ Codeforces 708C
 LOJ 2155
 
 http://wys.life/2020-08-NOI-WC-Lecture
+
+https://www.luogu.com.cn/problem/P2481
