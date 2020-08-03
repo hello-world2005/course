@@ -9,11 +9,18 @@ int Random(int l, int r) {
 
 int main() {
   srand(time(0));
-  int n = Random(1, 1000), m = Random(1, 1000);
-  printf("%d %d ", n, m);
-  for (int i = 1; i <= m; ++i)
-    printf("%d ", Random(1, n));
-  for (int i = 2; i <= n; ++i)
-    printf("%d ", Random(1, i - 1));
+  int n = Random(1, 10), m = Random(1, 10);
+  printf("%d %d\n", n, m);
+  for (int i = 1; i <= n; ++i)
+    printf("%d ", Random(1, 10));
+  printf("\n");
+  for (int i = 1; i <= m; ++i) {
+    int opt = Random(1, 3), l, r;
+    if (opt >= 2)
+      l = Random(1, n), r = Random(l, n);
+    else
+      l = Random(1, n), r = Random(1, 10);
+    printf("%d %d %d\n", opt, l, r);
+  }
   return 0;
 }

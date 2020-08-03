@@ -5,8 +5,6 @@
 #include <random>
 #include <unordered_map>
 
-// #undef DEBUG
-
 const int N = 1e5 + 10;
 const int M = 1e6 + 10;
 const int K = 1e4;
@@ -66,17 +64,16 @@ int Mu(ll x) {
     return mu[x];
   if (_mu.find(x) != _mu.end())
     return _mu[x];
-  int tot = 0, t = x;
-  for (int i = 1; i <= cnt && pri[i] * pri[i] <= x; ++i)
-    if (x % pri[i] == 0) {
-      if ((x / pri[i]) % pri[i] == 0)
-        return _mu[x] = 0;
-      ++tot;
-      t /= pri[i];
-    }
-  if (t != 1)
-    ++tot;
-  return _mu[x] = (tot & 1) ? -1 : 1;
+  int _x = x, res = 1;
+  for (int i = 1; pri[i] * pri[i] <= x; ++i) {
+    if (x % pri[i])
+      continue;
+    int _i = x / i;
+    if (_i % i == 0)
+      return _mu[_x] = 0;
+    res = -x;
+  }
+  return _mu[_x] = res;
 }
 
 std::mt19937 rnd(time(NULL));
@@ -92,8 +89,7 @@ struct FhqTreap {
       ch[0] = ch[1] = 0;
       tag = 1;
       int _val = val;
-      // for (int i = 1; i <= cnt && pri[i] * pri[i] <= _val; ++i)
-      for (int i = 1; i <= cnt; ++i)
+      for (int i = 1; i <= cnt && pri[i] * pri[i] <= _val; ++i)
         if (val % pri[i] == 0) {
           int _i = val / pri[i];
           if (_i % pri[i] == 0)
@@ -105,10 +101,7 @@ struct FhqTreap {
       a = s;
     }
 
-    int GetVal() {
-      // printf("wirgulh %d %d\n", tag, (int)s.count());
-      return tag * ((s.count() & 1) ? -1 : 1);
-    }
+    int GetVal() { return tag * ((s.count() & 1) ? -1 : 1); }
   } t[N];
   int tot;
 
@@ -123,20 +116,10 @@ struct FhqTreap {
   void PushUp(int rt) {
     std::bitset<K> qwq = t[lc(rt)].s & t[rc(rt)].s;
     if (qwq.any())
-      t[rt].tag &= 0;
+      t[rt].tag = 0;
     else
-      t[rt].tag &= 1;
-    qwq = t[rt].s & t[lc(rt)].s;
-    if (qwq.any())
-      t[rt].tag &= 0;
-    else
-      t[rt].tag &= 1;
-    qwq = t[rt].s & t[rc(rt)].s;
-    if (qwq.any())
-      t[rt].tag &= 0;
-    else
-      t[rt].tag &= 1;
-    t[rt].s |= t[lc(rt)].s | t[rc(rt)].s;
+      t[rt].tag = 1;
+    t[rt].s = t[lc(rt)].s | t[rc(rt)].s;
     t[rt].sze = t[lc(rt)].sze + t[rc(rt)].sze + 1;
   }
 
@@ -145,7 +128,7 @@ struct FhqTreap {
       rt1 = rt2 = 0;
       return;
     }
-    if (t[lc(rt)].sze <= v) {
+    if (t[lc(rt)].sze  <= v) {
       rt1 = rt;
       Split(rc(rt), v - t[lc(rt)].sze - 1, rc(rt), rt2);
     } else {
@@ -154,7 +137,6 @@ struct FhqTreap {
     }
     if (t[rt].ch[0] == 0 && t[rt].ch[1] == 0)
       t[rt].s = t[rt].a;
-    // printf("!!E$y27r3q9uiawgf %d %d\n", rt, (int)t[rt].s.count());
     PushUp(rt);
   }
 
@@ -194,17 +176,13 @@ int main() {
     fhq.NewNode(a[i]), rt = fhq.Merge(rt, i);
   }
   while (q--) {
-    // printf("> ");
-    // for (int i = 1; i <= 5; ++i)
-    //   printf("%d ", fhq.t[1].s.test(i));
-    // printf("\n");
     int opt, l, r;
     scanf("%d%d%d", &opt, &l, &r);
     if (opt == 1) {
       ft.Change(l, r);
       int x, y, z;
       fhq.Split(rt, r, x, y);
-      fhq.Split(x, r - 1, x, z);
+      fhq.Split(x, l - 1, x, z);
       std::bitset<K> s;
       int val = r, tag = 1;
       for (int i = 1; i <= cnt; ++i)
@@ -225,7 +203,7 @@ int main() {
       int x, y, z;
       fhq.Split(rt, r, x, y);
       fhq.Split(x, l - 1, x, z);
-      Print();
+      // Print();
       printf("%d\n", fhq.t[z].GetVal());
       fhq.Merge(fhq.Merge(x, z), y);
     }
@@ -233,18 +211,10 @@ int main() {
   return 0;
 }
 
-// 1 5
-// 6
-// 1 1 5
-// 3 1 1
-// 1 1 3
-// 1 1 7
-// 3 1 1
+// 5 1
+// 3 4 5 2 1
+// 3 4 5
 
-// 2 5
-// 6 8 
-// 2 2 2
-// 2 2 2
-// 3 2 2
-// 2 1 1
-// 3 1 2
+// 5 1
+// 3 4 5 2 1
+// 3 1 5
