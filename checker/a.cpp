@@ -1,43 +1,12 @@
-#include <algorithm>
 #include <bitset>
 #include <cstdio>
-#include <ctime>
-#include <random>
 #include <unordered_map>
-
-// #undef DEBUG
-
-const int N = 1e5 + 10;
-const int M = 1e6 + 10;
-const int K = 1e4;
-
-int n, q;
-int a[N];
 
 typedef long long ll;
 
-struct FenwickTree {
-  ll sum[N];
-
-#define LowBit(x) (x & -x)
-
-  void Add(int p, int k) {
-    for (; p <= n; p += LowBit(p))
-      sum[p] += k;
-  }
-
-  ll Query(int p) {
-    ll res = 0;
-    for (; p; p -= LowBit(p))
-      res += sum[p];
-    return res;
-  }
-
-  void Change(int p, int k) {
-    ll pre = Query(p) - Query(p - 1);
-    Add(p, k - pre);
-  }
-} ft;
+const int N = 1e5 + 10;
+const int K = 1e4;
+const int M = 5e5 + 10;
 
 int pri[M], cnt;
 bool vis[M];
@@ -66,8 +35,9 @@ int Mu(ll x) {
     return mu[x];
   if (_mu.find(x) != _mu.end())
     return _mu[x];
-  int tot = 0, t = x;
-  for (int i = 1; i <= cnt && pri[i] * pri[i] <= x; ++i)
+  int tot = 0;
+  ll t = x;
+  for (int i = 1; i <= cnt && 1ll * pri[i] * pri[i] <= x; ++i)
     if (x % pri[i] == 0) {
       if ((x / pri[i]) % pri[i] == 0)
         return _mu[x] = 0;
@@ -79,172 +49,127 @@ int Mu(ll x) {
   return _mu[x] = (tot & 1) ? -1 : 1;
 }
 
-std::mt19937 rnd(time(NULL));
+int n, q;
+int a[N];
 
-struct FhqTreap {
+struct FenwickTree {
+  ll sum[N];
+
+#define LowBit(x) (x & -x)
+
+  void Add(int p, int k) {
+    for (; p <= n; p += LowBit(p))
+      sum[p] += k;
+  }
+
+  ll Query(int p) {
+    ll res = 0;
+    for (; p; p -= LowBit(p))
+      res += sum[p];
+    return res;
+  }
+
+  void Change(int p, int k) {
+    int pre = (int)(Query(p) - Query(p - 1));
+    Add(p, k - pre);
+  }
+} ft;
+
+struct SegmentTree {
   struct Node {
-    std::bitset<K> a, s;  // a 是原来的, s 是类似于 tag
-    int tag, rnd;
-    int sze, ch[2];
+    std::bitset<K> s;
+    int tag;
 
-    Node() : tag(0), rnd(0), sze(1) { ch[0] = ch[1] = 0, s.reset(); }
-    Node(int val) : rnd(::rnd()), sze(1) {
-      ch[0] = ch[1] = 0;
+    Node() : tag(0) { s.reset(); }
+
+    Node operator=(const int& x) {
+      int r = x;
       tag = 1;
-      int _val = val;
-      // for (int i = 1; i <= cnt && pri[i] * pri[i] <= _val; ++i)
-      for (int i = 1; i <= cnt; ++i)
-        if (val % pri[i] == 0) {
-          int _i = val / pri[i];
+      s.reset();
+      // printf("%d: ", x);
+      for (int i = 1; i <= cnt && pri[i] <= x; ++i)
+        if (r % pri[i] == 0) {
+          int _i = r / pri[i];
           if (_i % pri[i] == 0)
             tag = 0;
-          while (val % pri[i] == 0)
-            val /= pri[i];
+          while (r % pri[i] == 0)
+            r /= pri[i];
           s.set(i);
+          // printf("%d ", i);
         }
-      a = s;
+      // printf("\n");
+      return *this;
+    }
+    Node operator+(const Node& rhs) {
+      Node res;
+      std::bitset<K> qwq = s & rhs.s;
+      if (qwq.none())
+        res.tag = 1;
+      res.tag &= tag & rhs.tag;
+      res.s = s | rhs.s;
+      return res;
     }
 
-    int GetVal() {
-      // printf("wirgulh %d %d\n", tag, (int)s.count());
+    int Val() {
+      // printf("%d %d\n", tag, s.count());
       return tag * ((s.count() & 1) ? -1 : 1);
     }
-  } t[N];
-  int tot;
+  } t[N << 2];
 
-#define lc(rt) t[rt].ch[0]
-#define rc(rt) t[rt].ch[1]
+#define lc (rt << 1)
+#define rc (rt << 1 | 1)
+#define ls lc, l, mid
+#define rs rc, mid + 1, r
 
-  int NewNode(int val) {
-    t[++tot] = Node(val);
-    return tot;
-  }
+  void PushUp(int rt) { t[rt] = t[lc] + t[rc]; }
 
-  void PushUp(int rt) {
-    std::bitset<K> qwq = t[lc(rt)].s & t[rc(rt)].s;
-    if (qwq.any())
-      t[rt].tag &= 0;
-    else
-      t[rt].tag &= 1;
-    qwq = t[rt].s & t[lc(rt)].s;
-    if (qwq.any())
-      t[rt].tag &= 0;
-    else
-      t[rt].tag &= 1;
-    qwq = t[rt].s & t[rc(rt)].s;
-    if (qwq.any())
-      t[rt].tag &= 0;
-    else
-      t[rt].tag &= 1;
-    t[rt].s |= t[lc(rt)].s | t[rc(rt)].s;
-    t[rt].sze = t[lc(rt)].sze + t[rc(rt)].sze + 1;
-  }
-
-  void Split(int rt, int v, int& rt1, int& rt2) {
-    if (!rt) {
-      rt1 = rt2 = 0;
-      return;
-    }
-    if (t[lc(rt)].sze <= v) {
-      rt1 = rt;
-      Split(rc(rt), v - t[lc(rt)].sze - 1, rc(rt), rt2);
-    } else {
-      rt2 = rt;
-      Split(lc(rt), v, rt1, lc(rt));
-    }
-    if (t[rt].ch[0] == 0 && t[rt].ch[1] == 0)
-      t[rt].s = t[rt].a;
-    // printf("!!E$y27r3q9uiawgf %d %d\n", rt, (int)t[rt].s.count());
+  void Build(int rt, int l, int r) {
+    if (l == r)
+      return t[rt] = a[l], void();
+    int mid = (l + r) >> 1;
+    Build(ls), Build(rs);
     PushUp(rt);
   }
 
-  int Merge(int rt1, int rt2) {
-    if (!rt1)
-      return t[rt2].s = t[rt2].a, rt2;
-    if (!rt2)
-      return t[rt1].s = t[rt1].a, rt1;
-    if (t[rt1].rnd < t[rt2].rnd) {
-      rc(rt1) = Merge(rc(rt1), rt2);
-      PushUp(rt1);
-      return rt1;
-    } else {
-      lc(rt2) = Merge(rt1, lc(rt2));
-      PushUp(rt2);
-      return rt2;
-    }
+  void Change(int rt, int l, int r, int p, int k) {
+    if (l == r)
+      return t[rt] = a[l] = k, void();
+    int mid = (l + r) >> 1;
+    if (p <= mid)
+      Change(ls, p, k);
+    else
+      Change(rs, p, k);
+    PushUp(rt);
   }
-} fhq;
 
-#ifdef DEBUG
-void Print() {
-  for (int i = 1; i <= n; ++i)
-    printf("%d %d\n%d %d\n", i, fhq.t[i].ch[0], i, fhq.t[i].ch[1]);
-}
-#else
-void Print() {}
-#endif
+  Node Query(int rt, int l, int r, int ql, int qr) {
+    if (ql <= l && r <= qr)
+      return t[rt];
+    int mid = (l + r) >> 1;
+    if (qr <= mid)
+      return Query(ls, ql, qr);
+    if (ql > mid)
+      return Query(rs, ql, qr);
+    return Query(ls, ql, qr) + Query(rs, ql, qr);
+  }
+} st;
 
 int main() {
   Sieve();
   scanf("%d%d", &n, &q);
-  int rt = 0;
-  for (int i = 1; i <= n; ++i) {
-    scanf("%d", &a[i]);
-    ft.Add(i, a[i]);
-    fhq.NewNode(a[i]), rt = fhq.Merge(rt, i);
-  }
+  for (int i = 1; i <= n; ++i)
+    scanf("%d", &a[i]), ft.Add(i, a[i]);
+  st.Build(1, 1, n);
   while (q--) {
-    // printf("> ");
-    // for (int i = 1; i <= 5; ++i)
-    //   printf("%d ", fhq.t[1].s.test(i));
-    // printf("\n");
     int opt, l, r;
     scanf("%d%d%d", &opt, &l, &r);
     if (opt == 1) {
-      ft.Change(l, r);
-      int x, y, z;
-      fhq.Split(rt, r, x, y);
-      fhq.Split(x, r - 1, x, z);
-      std::bitset<K> s;
-      int val = r, tag = 1;
-      for (int i = 1; i <= cnt; ++i)
-        if (val % pri[i] == 0) {
-          int _i = val / pri[i];
-          if (_i % pri[i] == 0)
-            tag = 0;
-          while (val % pri[i] == 0)
-            val /= pri[i];
-          s.set(i);
-        }
-      fhq.t[z].tag = tag, fhq.t[z].a = fhq.t[z].s = s;
-      fhq.Merge(fhq.Merge(x, z), y);
+      ft.Change(l, r), st.Change(1, 1, n, l, r);
     } else if (opt == 2) {
-      ll sum = ft.Query(r) - ft.Query(l - 1);
-      printf("%d\n", Mu(sum));
+      printf("%d\n", Mu(ft.Query(r) - ft.Query(l - 1)));
     } else {
-      int x, y, z;
-      fhq.Split(rt, r, x, y);
-      fhq.Split(x, l - 1, x, z);
-      Print();
-      printf("%d\n", fhq.t[z].GetVal());
-      fhq.Merge(fhq.Merge(x, z), y);
+      printf("%d\n", st.Query(1, 1, n, l, r).Val());
     }
   }
   return 0;
 }
-
-// 1 5
-// 6
-// 1 1 5
-// 3 1 1
-// 1 1 3
-// 1 1 7
-// 3 1 1
-
-// 2 5
-// 6 8 
-// 2 2 2
-// 2 2 2
-// 3 2 2
-// 2 1 1
-// 3 1 2
