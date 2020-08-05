@@ -131,6 +131,7 @@
   },
   "workbench.colorTheme": "One Dark Pro",
   "workbench.iconTheme": "vscode-icons",
+  // "C_Cpp.clang_format_style": "/.vscode/.clang-format",
   "C_Cpp.clang_format_style": "Chromium",
   "C_Cpp.clang_format_sortIncludes": true,
   "C_Cpp.default.cppStandard": "c++17",
