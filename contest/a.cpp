@@ -1,49 +1,36 @@
 #include <algorithm>
 #include <cstdio>
-#include <cmath>
-#include <vector>
 
-const double EPS = 1e-8;
+typedef long long ll;
 
-double ax1, ay1, ax2, ay2;
-double bx1, by1, bx2, by2;
+const int MOD = 1e9 + 7;
 
-typedef std::pair<double, double> pdd;
-typedef std::pair<pdd, int> pddi;
-typedef std::pair<double, int> pdi;
-
-pdd po[10][10];
+ll Phi(ll n) {
+  ll res = 1;
+  for (ll i = 2; i * i <= n; i++)
+    if (n % i == 0) {
+      n /= i, res *= i - 1;
+      while (n % i == 0)
+        n /= i, res *= i;
+    }
+  if (n > 1)
+    res *= n - 1;
+  return res;
+}
 
 int main() {
-  int T;
-  scanf("%d", &T);
-  while (T--) {
-    std::vector<pddi> p;
-    std::vector<pdi> xx, yy;
-    for (int i = 1; i <= 2; ++i)
-      for (int j = 1; j <= 4; ++j) {
-        double x, y;
-        scanf("%lf%lf", &x, &y);
-        po[i][j] = std::make_pair(x, y);
-        p.push_back(std::make_pair(std::make_pair(x, y), i));
-        xx.push_back(std::make_pair(x, i)), yy.push_back(std::make_pair(y, i));
-      }
-    // std::sort(p.begin(), p.end(), [&](const pddi lhs, const pddi rhs) {
-    //   return lhs.first.first < rhs.first.first;
-    // });
-    // std::sort(xx.begin(), xx.end(), [&](const pdi lhs, const pdi rhs) {
-    //   return ;
-    // });
-    int qwq = 0, qaq = 0;
-    auto Sqr = [&](const double x) { return x * x; };
-    auto Dis = [&](const pdd a, const pdd b) {
-      return sqrt(Sqr(a.first - b.first) + Sqr(a.second - b.second));
-    };
-    for (int i = 1; i <= 4; ++i)
-      for (int j = 1; j <= 4; ++j)
-        if (Dis(po[1][i], po[2][j]))
-          qwq = i, qaq = j;
-    
+  ll n, m;
+  scanf("%lld", &n);
+  m = Phi(n);
+  ll ans1 = 0, ans2 = 0;
+  for (ll l = 1, r = 0; l <= n; l = r + 1) {
+    r = n / (n / l);
+    (ans1 += n / l * (std::min(r, n) - l + 1)) %= MOD;
   }
+  for (ll l = 1, r = 0; l <= m; l = r + 1) {
+    r = n / (n / l);
+    (ans2 += n / l * (std::min(r, m) - l + 1)) %= MOD;
+  }
+  printf("%lld\n", ans1 * ans2 % MOD);
   return 0;
 }
