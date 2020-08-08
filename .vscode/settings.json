@@ -84,8 +84,6 @@
   "code-runner.runInTerminal": true,
   "code-runner.saveFileBeforeRun": true,
   "code-runner.executorMap": {
-
-
     "javascript": "node",
     "java": "cd $dir && javac $fileName && java $fileNameWithoutExt",
     "c": "cd $dir && gcc $fileName -o $fileNameWithoutExt && $dir$fileNameWithoutExt",
@@ -131,8 +129,7 @@
   },
   "workbench.colorTheme": "One Dark Pro",
   "workbench.iconTheme": "vscode-icons",
-  // "C_Cpp.clang_format_style": "/.vscode/.clang-format",
-  "C_Cpp.clang_format_style": "Chromium",
+  "C_Cpp.clang_format_style": "file",
   "C_Cpp.clang_format_sortIncludes": true,
   "C_Cpp.default.cppStandard": "c++17",
   "C_Cpp.default.defines": [

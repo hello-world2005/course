@@ -51,6 +51,8 @@ int main() {
     // printf("%d %d %d %d\n", _2, _4, _6, _8);
     if (_8)
       printf("YES\n");
+    else if (_6 >= 2)
+      printf("YES\n");
     else if (_6 && _2 - _6)
       printf("YES\n");
     else if (_4 - _6 >= 2)

@@ -16,6 +16,7 @@
 !*.docx
 !*.tex
 !*.ipynb
+!.clang-format
 
 @#$%^&*().cpp
 tmp.cpp
