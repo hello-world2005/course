@@ -2,12 +2,6 @@
 #include <cstdio>
 
 /*
-  W
- WBW
-WBWBW
- WBW
-  W
-
  W W
 WBWBW
  W W
@@ -17,23 +11,25 @@ int main() {
   int T;
   scanf("%d", &T);
   while (T--) {
-    int n, m;
+    int n, m, p = 2, t = 1, y = 2;
     scanf("%d%d", &n, &m);
-    if (n == m) {
-      printf("YES\n");
-      for (int i = 1; i <= n + m; ++i)
-        printf("%d %d\n", 1, i);
+    int i = std::min(n, m), j = std::max(n, m);
+    if (j > 3 * i + 1) {
+      puts("NO");
     } else {
-      bool flag = n < m ? 1 : 0;
+      puts("YES");
       if (n < m)
-        std::swap(n, m);
-      int l = (n - m) / 2;
-      if (n - 2 * m > 1) {
-        printf("NO\n");
-        continue;
-      }
-      n -= m;
-      for (int i = 1; i <= n; ++i)
+        ++y;
+      while (i > 0)
+        printf("%d %d\n", p, y), p += 2, i--;
+      while (j > 0 && t < p)
+        printf("%d %d\n", t, y), t += 2, j--;
+      t = 2;
+      while (j > 0 && t < p - 1)
+        printf("%d %d\n", t, y - 1), t += 2, j--;
+      t = 2;
+      while (j > 0)
+        printf("%d %d\n", t, y + 1), t += 2, j--;
     }
   }
   return 0;
