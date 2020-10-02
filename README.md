@@ -1,4 +1,7 @@
 # course
+
+配置文件是 MacOS 下的
+
 Training program
 
 任务计划：

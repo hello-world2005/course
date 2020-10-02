@@ -1,13 +1,11 @@
 {
     "configurations": [
         {
-            "name": "Win32",
+            "name": "Mac",
             "includePath": [
-                "${workspaceFolder}/**",
-                "C:/MinGw/include/**",
-                "C:/MinGW/lib/gcc/mingw32/8.2.0/include/c++/**"
+                "${workspaceFolder}/**"
             ],
-            "compilerPath": "C:/MinGW/bin/g++",
+            "compilerPath": "/usr/bin/g++",
             "cStandard": "c11",
             "intelliSenseMode": "gcc-x64",
             "cppStandard": "c++17",
