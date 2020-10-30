@@ -12,6 +12,19 @@
             "defines": [
                 "DEBUG"
             ]
+        },
+        {
+            "name": "Windows",
+            "includePath": [
+                "${workspaceFolder}/**"
+            ],
+            "compilerPath": "E:/helloworld2005/MinGW/bin/g++",
+            "cStandard": "c11",
+            "intelliSenseMode": "gcc-x64",
+            "cppStandard": "c++17",
+            "defines": [
+                "DEBUG"
+            ]
         }
     ],
     "version": 4
