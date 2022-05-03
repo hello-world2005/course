@@ -3,7 +3,8 @@
         {
             "name": "Mac",
             "includePath": [
-                "${workspaceFolder}/**"
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/学校/信息技术/出题/testlib"
             ],
             "compilerPath": "/usr/bin/g++",
             "cStandard": "c11",
