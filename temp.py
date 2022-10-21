@@ -1,0 +1,5 @@
+file = open('temp', 'w')
+file.write('qwq')
+file.close()
+file = open('temp', 'r')
+print(file.read())
