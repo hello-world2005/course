@@ -1,0 +1,2 @@
+def FetchData():
+  return None

@@ -1,26 +1,53 @@
 #include <cstdio>
-#include <algorithm>
 
-bool Check(int a[]) {
-  int n = 10;
-  for (int i = 1, j = 2; i <= n; ++i, ++j) {
-      int t = 0;
-      for (int k = i; k <= j; ++k)
-        t = t * 10 + a[k];
-      if (t == 12 || t == 21 || t == 13 || t == 31 || t == 23 || t == 32)
-        return false;
-      if (t == 45 || t == 54)
-        return false;
-    }
-  return true;
+int n = 10;
+int a[] = {0, 1, 1, 1, 2, 1, 3, 1, 4, 1, 5};
+int opt[20];
+
+int Sum() {
+  int ans = 0, pre = 0, lstopt = 0;
+  for (int i = 1; i <= n; ++i) {
+    if (opt[i] == 0) pre = pre * 10 + a[i];
+    if (opt[i] == 1) ans += (lstopt == 1 ? 1 : -1) * pre, pre = a[i], lstopt = 1;
+    if (opt[i] == 2) ans += (lstopt == 1 ? 1 : -1) * pre, pre = a[i], lstopt = 2;
+  }
+  ans += (lstopt == 1 ? 1 : -1) * pre;
+  return ans;
+}
+
+int tot;
+
+void Print() {
+  for (int i = 1; i <= n; ++i) {
+    if (opt[i] == 1) printf("+");
+    if (opt[i] == 2) printf("-");
+    printf("%d", a[i]);
+  }
+  printf("\n");
+}
+
+void Dfs(int dep) {
+  if (dep == n + 1) {
+    if (Sum() == 100) Print(), tot += 1;
+    return;
+  }
+  if (dep == 1) {
+    opt[dep] = 1;
+    Dfs(dep + 1);
+    opt[dep] = 2;
+    Dfs(dep + 1);
+  } else {
+    opt[dep] = 0;
+    Dfs(dep + 1);
+    opt[dep] = 1;
+    Dfs(dep + 1);
+    opt[dep] = 2;
+    Dfs(dep + 1);
+  }
 }
 
 int main() {
-  int a[15] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0, 0, 0, 0}, ans = 0;
-  do {
-    if (Check(a))
-      ++ans;
-  } while (std::next_permutation(a + 1, a + 8 + 1));
-  printf("%d\n", ans);
+  Dfs(1);
+  printf("%d\n", tot);
   return 0;
 }

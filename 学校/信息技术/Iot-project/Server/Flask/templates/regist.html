@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% from 'bootstrap5/form.html' import render_form %}
+<html>
+
+<body>
+{% block content%}
+  <h2>Regist</h2>
+  {{ render_form(form) }}
+{% endblock %}
+
+{{ bootstrap.load_js() }}
+
+</body>
+</html>

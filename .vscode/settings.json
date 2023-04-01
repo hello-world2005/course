@@ -135,5 +135,6 @@
   "C_Cpp.default.defines": [
     "DEBUG"
   ],
-  "python.formatting.provider": "autopep8"
+  "python.formatting.provider": "autopep8",
+  "python.analysis.typeCheckingMode": "basic"
 }
