@@ -64,7 +64,7 @@ int ask(int x,int l,int r){
     return t;
 }
 int main(){
-    n=read();
+    n=read();m=read();
     fo(i,1,n) a[i]=read(),b[i]=a[i];
     sort(b+1,b+n+1);
     top=unique(b+1,b+n+1)-b-1;
@@ -136,10 +136,12 @@ int main(){
     fd(i,belong[n]-1,1)
         fo(j,i+1,belong[n])
             f[i][j]+=f[i][j-1]+f[i+1][j]-f[i+1][j-1];
-    m=read();
     while (m--){
         j=read();k=read();
-        j^=ans;k^=ans;
+        j = (j ^ ans - 1 + n) % n + 1;
+        k = (k ^ ans - 1 + n) % n + 1;
+        if(j>k) swap(j, k);
+        // printf("--%d %d\n", j, k);
         l=belong[j];r=belong[k];
         if (l==r){
             ans=ask(l,j,k);
