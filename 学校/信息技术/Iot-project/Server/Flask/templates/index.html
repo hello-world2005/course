@@ -3,11 +3,176 @@
 <html>
 
 <body>
-{% block content%}
-data
-{% endblock %}
+  {% block Userinfo %}
+  <li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-bs-toggle="dropdown">
+      {{ name }}
+    </a>
+    <div class="dropdown-menu">
+      <a class="dropdown-item" href="/logout"> Logout </a>
+    </div>
+  </li>
+  {% endblock %}
 
-{{ bootstrap.load_js() }}
+  {% block content%}
+  <!-- <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script> -->
+  <!-- <script src="http://code.highcharts.com/highcharts.js"></script> -->
+  <script src="/static/jquery-3.6.4.min.js"></script>
+  <script src="/static/highcharts.js"></script>
+  <div class="row">
+    <div class="col">
+      <div id="container1" class="container-md"></div>
+      <script language="JavaScript">
+        $(function () {
+          var x = [];
+          var y = [];
+          var xtext = [];
+          var color = ["gray", "pink", "red", "blue", "yellow", "green", "#fff"];
+          $.ajax({
+            type: 'get',
+            url: '/fetchdata',//请求数据的地址
+            data: {
+              filter: 'therometer'
+            },
+            success: function (data) {
+              series = []
+              xAxis = []
+              $.each(data, function (i, v) {
+                series.push(parseInt(v.val))
+                xAxis.push(v.time)
+              })
+              high(xAxis, series)
+            }
+          });
+          function high(xAxis, series) {
+            console.log(xAxis, series)
+            var chart = Highcharts.chart('container1', {
+              title: {
+                text: 'Temperature'
+              },
+              yAxis: {
+                title: {
+                  text: 'Temperature'
+                },
+              },
+              legend: {
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'middle'
+              },
+              xAxis: {
+                categories: xAxis
+              },
+              series: [{
+                name: '',
+                data: series,
+              }],
+            });
+          }
+        });
+      </script>
+    </div>
+    <div class="col">
+      <div id="container2" class="container-md"></div>
+      <script language="JavaScript">
+        $(function () {
+          var x = [];
+          var y = [];
+          var xtext = [];
+          var color = ["gray", "pink", "red", "blue", "yellow", "green", "#fff"];
+          $.ajax({
+            type: 'get',
+            url: '/fetchdata',//请求数据的地址
+            data: {
+              filter: 'humidity'
+            },
+            success: function (data) {
+              series = []
+              xAxis = []
+              $.each(data, function (i, v) {
+                series.push(parseInt(v.val))
+                xAxis.push(v.time)
+              })
+              high(xAxis, series)
+            }
+          });
+          function high(xAxis, series) {
+            console.log(xAxis, series)
+            var chart = Highcharts.chart('container2', {
+              title: {
+                text: 'Humidity'
+              },
+              yAxis: {
+                title: {
+                  text: 'Humidity'
+                },
+              },
+              legend: {
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'middle'
+              },
+              xAxis: {
+                categories: xAxis
+              },
+              series: [{
+                name: '',
+                data: series,
+              }],
+            });
+          }
+        });
+      </script>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <table class="table">
+        <thead>
+          <tr>
+            <th> 时间 </th>
+            <th> 访客 </th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+  <script language="javascript">
+    $(function () {
+      $.ajax({
+        type: 'get',
+        url: '/guest',
+        success: function (data) {
+          ti = []
+          na = []
+          $.each(data, function (i, v) {
+            ti.push(v.time)
+            na.push(v.name)
+          })
+          draw(ti, na)
+        }
+      });
+      function draw(ti, na) {
+        var tbody = document.querySelector("tbody");
+        for (var i = 0; i < ti.length; i++) {
+          var tr = document.createElement("tr");
+          tbody.appendChild(tr);
+          var td = document.createElement("td");
+          tr.appendChild(td);
+          td.innerHTML = ti[i];
+          var te = document.createElement("td");
+          tr.appendChild(te);
+          te.innerHTML = na[i];
+        }
+      }
+    });
+  </script>
+
+  {% endblock %}
+
+  {{ bootstrap.load_js() }}
 
 </body>
+
 </html>

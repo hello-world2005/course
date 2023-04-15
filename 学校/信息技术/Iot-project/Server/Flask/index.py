@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, request, redirect, session, flash
+from flask import Flask, render_template, request, redirect, session, flash, jsonify
 import sqlite3
 from datetime import timedelta
 from function import *
@@ -8,6 +8,8 @@ from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired, EqualTo
 from flask_bootstrap import Bootstrap5
 import hashlib
+import time
+import json
 
 app = Flask(__name__)
 app.config['SESSION_KEY'] = os.urandom(8)
@@ -26,7 +28,7 @@ class RegisterForm(FlaskForm):
 class LoginForm(FlaskForm):
   username = StringField(label = u'用户名', validators = [DataRequired(u'用户名非空')])
   password = PasswordField(label = u'密码', validators = [DataRequired(u'密码非空')])
-  submit = SubmitField(label = u'登陆')
+  submit = SubmitField(label = u'登录')
 
 @app.route('/', methods = ['GET'])
 def Index():
@@ -37,7 +39,10 @@ def Index():
   if (username == None):
     redirect('/login')
   data = FetchData()
-  return render_template('index.html')
+  if ('username' not in session):
+    return render_template('index_nologin.html')
+  else:
+    return render_template('index.html', name = session['username'])
 
 @app.route('/login', methods = ['GET', 'POST'])
 def Login():
@@ -52,6 +57,7 @@ def Login():
     res = cur.fetchall()
     cur.close()
     db.close()
+    print(res)
     if (len(res) > 0):
       password1 = res[0][2]
       if (password == password1):
@@ -81,5 +87,94 @@ def Regist():
     flash(u'用户名或密码不合法')
   return render_template('regist.html', form = form)
 
+@app.route('/logout')
+def Logout():
+  if ('username' in session):
+    del session['username']
+  return redirect('/login')
+
+@app.route('/input')
+def Input():
+  id = request.args.get('id')
+  data = request.args.get('rawdata')
+  t = time.localtime()
+  ti = time.strftime('%Y-%m-%d %H:%M:%S', t)
+  db = sqlite3.connect('data/data.sqlite')
+  cur = db.cursor()
+  cur.execute('insert into data (sensorid, val, timestamp) values ("%s", "%s", "%s")' % (id, data, ti))
+  db.commit()
+  cur.close()
+  db.close()
+  return 'ok'
+
+@app.route('/amp')
+def Amp():
+  return app.send_static_file('data.amp')
+
+@app.route('/fetchdata')
+def FetchData():
+  filt = request.args.get('filter')
+  print('Fetch', filt)
+  db = sqlite3.connect('data/data.sqlite')
+  cur = db.cursor()
+  cur.execute('select * from sensor where cata="%s"' % filt)
+  sensor = cur.fetchall()
+  data = []
+  for i in sensor:
+    cur.execute('select * from data where sensorid="%s"' % i[0])
+    d = cur.fetchall()
+    for j in range(len(d)):
+      data.append({'id': d[j][0], 'val': d[j][1], 'time': d[j][2][-8:]})
+  if (len(data) == 0): return jsonify({})
+  if (len(data) > 10):
+    data = data[:-10]
+  _data = {}
+  x = 0
+  for i in data:
+    x += 1
+    _data[x] = i
+  cur.close()
+  db.close()
+  print(data)
+  return jsonify(_data)
+
+@app.route('/guest')
+def Guest():
+  db = sqlite3.connect('data/data.sqlite')
+  cur = db.cursor()
+  cur.execute('select * from guest')
+  guest = cur.fetchall()
+  if (len(guest) > 5):
+    guest = guest[-5:]
+  data = {}
+  x = 0
+  for i in guest:
+    x += 1
+    data[x] = {'name': i[1], 'time': i[2]}
+  cur.close()
+  db.close()
+  return jsonify(data)
+
+@app.route('/control')
+def Control():
+  if ('username' not in session):
+    return redirect('/login')
+  return render_template('control.html', name = session['username'])
+
+@app.route('/windows')
+def Windows():
+  data = {}
+  db = sqlite3.connect('data/data.sqlite')
+  cur = db.cursor()
+  cur.execute('select * from windows')
+  _data = cur.fetchall()
+  x = 0
+  for i in _data:
+    x += 1
+    data[x] = {'id': i[1], 'stat': i[2]}
+  cur.close()
+  db.close()
+  return jsonify(data)
+
 if __name__ == '__main__':
-  app.run()
+  app.run(debug=True)

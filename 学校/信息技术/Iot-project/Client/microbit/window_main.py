@@ -6,6 +6,7 @@ SSID = ''
 PASSWORD = ''
 IP = ''
 PORT = ''
+ID = 1
 
 def ConnectWifi(SSID, PASSWORD):
   while Obloq.connectWifi(SSID,PASSWORD,10000) != True:
@@ -23,3 +24,9 @@ def Init():
 
 if __name__ == '__main__':
   Init()
+  while True:
+    f = microbit.compass.get_field_strength()
+    Upload('id=%d&rawdata=%d' % (ID, f))
+    g = dht11.read(pin)
+    Upload('id=%d&rawdata=%f' % (ID, g))
+    sleep(1000)

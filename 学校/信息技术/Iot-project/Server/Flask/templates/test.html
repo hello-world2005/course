@@ -1,0 +1,112 @@
+<script>
+  function load() {
+	$('#exampleTable')
+			.bootstrapTable(
+					{
+						method : 'get', // 服务器数据的请求方式 get or post
+						url : prefix + "/list", // 服务器数据的加载地址
+					//	showRefresh : true,
+					//	showToggle : true,
+					//	showColumns : true,
+						iconSize : 'outline',
+						toolbar : '#exampleToolbar',
+						striped : true, // 设置为true会有隔行变色效果
+						dataType : "json", // 服务器返回的数据类型
+						pagination : true, // 设置为true会在底部显示分页条
+						// queryParamsType : "limit",
+						// //设置为limit则会发送符合RESTFull格式的参数
+						singleSelect : false, // 设置为true将禁止多选
+						// contentType : "application/x-www-form-urlencoded",
+						// //发送到服务器的数据编码类型
+						pageSize : 10, // 如果设置了分页，每页数据条数
+						pageNumber : 1, // 如果设置了分布，首页页码
+						//search : true, // 是否显示搜索框
+						showColumns : false, // 是否显示内容下拉框（选择显示的列）
+						sidePagination : "server", // 设置在哪里进行分页，可选值为"client" 或者 "server"
+						queryParams : function(params) {
+							return {
+								//说明：传入后台的参数包括offset开始索引，limit步长，sort排序列，order：desc或者,以及所有列的键值对
+								limit: params.limit,
+								offset:params.offset,
+					           // name:$('#searchName').val(),
+								companyName:$('#searchName').val(),
+								isOutfood:$('#isOutfood_status').val(),
+								isFrozen:$('#isFrozen_status').val(),
+								companyBusinessStatus:$('#companyBusinessStatus_status').val()
+							};
+						},
+						// //请求服务器数据时，你可以通过重写参数的方式添加一些额外的参数，例如 toolbar 中的参数 如果
+						// queryParamsType = 'limit' ,返回参数必须包含
+						// limit, offset, search, sort, order 否则, 需要包含:
+						// pageSize, pageNumber, searchText, sortName,
+						// sortOrder.
+						// 返回false将会终止请求
+						columns : [
+								{
+									checkbox : true
+								},
+							
+									{
+									field : 'xxxx', 
+									title : 'xxxxx' ,
+									align : 'center',
+									//是使用bootstrap的switch组件的方法
+									formatter:project_status
+								},
+							// 
+						],
+						//这个是加载完表格之后需要把switch初始化
+						onLoadSuccess: function(data){
+							// {#初始化switch开关按钮#}
+							initSwitch(data);
+						},
+
+					});
+}
+//===这个是初始化switch组件的方法
+function initSwitch(e){
+	// {#获取行数据的状态#}
+	console.log('渲染数据完成后，打印所有数据')
+	console.log(data);
+	var data=$("#exampleTable").bootstrapTable("getData");
+	console.log('已获取全部数据%s',data);
+	for (let i in data){
+		console.log(data[i].project_code,data[i].status)
+		
+
+		
+			
+			$('[id="project_isOutfood_on"]').bootstrapSwitch({
+				onText: "开启",      // 设置ON文本
+				offText: "关闭",    // 设置OFF文本
+				onColor: "success",// 设置ON文本颜色(info/success/warning/danger/primary)
+				offColor: "danger",  // 设置OFF文本颜色 
+				size: "normal",    // 设置控件大小,从小到大  (mini/small/normal/large)
+				onSwitchChange:function(event,state){
+					let userid = this.name;
+					if(state==false){
+						updatecompay(userid,1,"isOutfood");
+					}else{
+						updatecompay(userid,0,"isOutfood");
+					}
+				}
+			}).bootstrapSwitch('state',true,true)
+		
+
+
+	}
+}
+
+
+// {#状态栏格式化#}
+function project_status(value, row, index) {
+	console.log(row);
+	if(row.xxxx== 0){
+		return '<input type="checkbox" checked  id="project_isOutfood_on" name="'
+			+ row.userId
+			+'">';
+	}
+	
+}
+
+</script>
