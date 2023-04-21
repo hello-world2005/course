@@ -20,7 +20,7 @@ kk 不想等太久，所以他要你的程序**强制在线**（不懂没有关�
 ```python
 l, r = map(int, input().split())
 ll = (l ^ last_ans - 1) % n + 1
-rr = (r ^ last_ans = 1) % n + 1
+rr = (r ^ last_ans - 1) % n + 1
 if (ll > rr): ll, rr = rr, ll
 ```
 
@@ -32,11 +32,15 @@ if (ll > rr): ll, rr = rr, ll
 
 |数据点|满足条件|
 |:--:|:--:|
-1|$n \le 100, q \le 100, a_i \le 10^9$
-2|$n \le 1000, q \le 100, a_i \le 1000$
-3|$n \le 1000, q \le 100, a_i \le 10^9$
-4, 5|$n \le 4 \times 10^4, q \le 10^4, a_i \le 10^9$
+1, 2|$n \le 100, q \le 100, a_i \le 10^9$
+3|$n \le 1000, q \le 100, a_i \le 1000$
+4, 5|$n \le 1000, q \le 100, a_i \le 10^9$
+E1, E2|$n \le 4 \times 10^4, q \le 10^4, a_i \le 10^9$
 
-因为 kk 做的题目很恶心，所以能够保证 $O(qn\log n)$ 的做法过不去（~~我才不会说数据是随机的呢~~）。
+~~因为 kk 做的题目很恶心，所以能够保证 $O(qn\log n)$ 的做法过不去（我才不会说数据是随机的呢）。~~
 
 ~~但说不定被小常数的卡过去了呢~~
+
+这题原本的数据范围被 Devinw 毙了，所以大数据被加入 Extra 数据组，未通过此数据不影响最终得分。
+
+

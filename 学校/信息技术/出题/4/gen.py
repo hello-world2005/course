@@ -3,8 +3,8 @@ import sys
 import os
 
 # file = open('1.in', 'w')
-x = int(sys.argv[1])
-file = open('data/%d.in' % int(sys.argv[1]), 'w')
+x = sys.argv[1]
+file = open('data/%s.in' % sys.argv[1], 'w')
 n = randint(40000, 40000)
 q = randint(10000, 10000)
 file.write(str(n) + ' ' + str(q) + '\n')
@@ -18,4 +18,4 @@ for i in range(q):
    r = randint(l, n)
    file.write(str(l) + ' ' + str(r) + '\n')
 file.close()
-os.system('time ./stdd < data/%d.in > data/%d.ans' % (x, x))
+os.system('time ./stdd < data/%s.in > data/%s.ans' % (x, x))

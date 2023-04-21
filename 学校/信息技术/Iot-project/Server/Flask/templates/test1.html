@@ -1,0 +1,404 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>项目列表</title>
+
+  <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <link href="https://cdn.bootcss.com/bootstrap-table/1.11.1/bootstrap-table.min.css" rel="stylesheet">
+  <script src="https://cdn.bootcss.com/bootstrap-table/1.11.1/bootstrap-table.min.js"></script>
+  <script src="https://cdn.bootcss.com/bootstrap-table/1.11.1/locale/bootstrap-table-zh-CN.min.js"></script>
+
+  {# bootstrap开关按钮#}
+  <link href="https://cdn.bootcss.com/bootstrap-switch/3.3.4/css/bootstrap3/bootstrap-switch.min.css" rel="stylesheet">
+  {#
+  <script src="https://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>  #}
+  <script src="https://cdn.bootcss.com/bootstrap-switch/3.3.4/js/bootstrap-switch.min.js"></script>
+
+
+</head>
+
+<body>
+  {# 自定义搜索条件区域#}
+  <div class="fixed-table-toolbar">
+    <div class="pull-left search">
+      <input id="search-keyword" class="form-control" placeholder="请输入项目名查询">
+    </div>
+
+
+    <div class="columns columns-left btn-group pull-left">
+      <button id="search-button" type="button" class="btn btn-primary">查询</button>
+    </div>
+    <div class="columns columns-left btn-group pull-left">
+      <button id="reset-button" type="button" class="btn btn-primary" onclick="clean()">重置</button>
+    </div>
+
+
+    <!-- 按钮触发模态框 -->
+    <div class="columns columns-right btn-group pull-right">
+      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">新增项目</button>
+    </div>
+    <!-- 模态框（Modal） -->
+    <form action="/addProject/" method="post" class="form-horizontal" role="form">
+      <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                ×
+              </button>
+              <h4 class="modal-title" id="myModalLabel">
+                新增项目
+              </h4>
+            </div>
+            {# 模态框body #}
+            <div class="modal-body" style="height: 100%;">
+              <div class="form-group">
+                <label for="firstname" class="col-sm-3 control-label">项目名</label>
+                <div class="col-sm-7">
+                  <input type="text" class="form-control" name="project-name" placeholder="请输入项目名">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="firstname" class="col-sm-3 control-label">项目编号</label>
+                <div class="col-sm-7">
+                  <input type="text" class="form-control" name="project-code" placeholder="请输入项目名">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="firstname" class="col-sm-3 control-label">版本</label>
+                <div class="col-sm-7">
+                  <input type="text" class="form-control" name="version" placeholder="请输入项目名">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="firstname" class="col-sm-3 control-label">业务部门</label>
+                <div class="col-sm-7">
+                  <input type="text" class="form-control" name="department" placeholder="请输入项目名">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="firstname" class="col-sm-3 control-label">测试负责人</label>
+                <div class="col-sm-7">
+                  <input type="text" class="form-control" name="tester" placeholder="请输入项目名">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="firstname" class="col-sm-3 control-label">测试文档</label>
+                <div class="col-sm-7">
+                  <input type="text" class="form-control" name="document" placeholder="请输入项目名">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="firstname" class="col-sm-3 control-label">上线时间</label>
+                <div class="col-sm-7">
+                  <input type="text" class="form-control" name="release-time" placeholder="请输入项目名">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="firstname" class="col-sm-3 control-label">状态</label>
+                <div class="col-sm-7">
+                  <input type="text" class="form-control" name="project-status" placeholder="请输入项目名">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="firstname" class="col-sm-3 control-label">更新时间</label>
+                <div class="col-sm-7">
+                  <input type="text" class="form-control" name="project-code" placeholder="请输入项目名">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="firstname" class="col-sm-3 control-label">项目经理</label>
+                <div class="col-sm-7">
+                  <input type="text" class="form-control" name="project-manager" placeholder="请输入项目经理名">
+                </div>
+              </div>
+
+            </div>
+            {# 模态框底部#}
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+              <input type="button" class="btn btn-primary" value="提交" />
+            </div>
+          </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+      </div>
+      {##}
+    </form>
+
+  </div>
+
+
+  {# bootstrap table自动渲染区域#}
+  <table id="mytab" class="table table-hover"></table>
+
+</body>
+
+
+<script type="text/javascript">
+
+
+
+  $('#mytab').bootstrapTable({
+                        { #全部参数# }
+                        {
+      #url: "{% static 'guchen_obj.json' %}",     //请求后台的URL（*）或者外部json文件，json内容若为json数组[{"id": 0,"name": "Item 0","price": "$0"},{"id": 1,"name": "Item 1","price": "$1"}]，#}
+      //且键的名字必须与下方columns的field值一样，同时sidePagination需要设置为client或者直接注释掉，这样前台才能读取到数据，且分页正常。
+      //当json文件内容为json对象时：{"total": 2,"rows": [{"id": 0,"name": "Item 0","price": "$0"},{"id": 1,"name": "Item 1","price": "$1"}]}，
+      //分页要写为server，但是server如果没有处理的话,会在第一页显示所有的数据，分页插件不会起作用
+
+      url: "/getdata",                     //从后台获取数据时，可以是json数组，也可以是json对象
+      dataType: "json",
+      method: 'get',                      //请求方式（*）
+      toolbar: '#toolbar',                //工具按钮用哪个容器
+      striped: true,                      //是否显示行间隔色
+      cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+      pagination: true,                   //是否显示分页（*）
+      sortable: true,                     //是否启用排序
+      sortOrder: "asc",                   //排序方式
+                        { #queryParams: oTableInit.queryParams,//传递参数（*）#}
+                        {
+      #sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）,数据为json数组时写client，json对象时（有total和rows时）这里要为server方式，写client列表无数据#}
+      pageNumber: 1,                       //初始化加载第一页，默认第一页
+      pageSize: 5,                       //每页的记录行数（*）
+      pageList: [10, 25, 50, 100],        //可供选择的每页的行数（*）
+                        {
+      #search: true,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大#}
+      strictSearch: true,
+      showColumns: true,                  //是否显示所有的列
+      showRefresh: true,                  //是否显示刷新按钮
+      minimumCountColumns: 2,             //最少允许的列数
+      clickToSelect: true,                //是否启用点击选中行
+                        {
+      #height: 500,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度#}
+      uniqueId: "ID",                     //每一行的唯一标识，一般为主键列
+      showToggle: false,                    //是否显示详细视图和列表视图的切换按钮
+      cardView: false,                    //是否显示详细视图
+      detailView: false,                   //是否显示父子表
+
+      //得到查询的参数
+      queryParams: function (params) {
+        //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+        var query_params = {
+          rows: params.limit,                         //页面大小
+          page: (params.offset / params.limit) + 1,   //页码
+          sort: params.sort,      //排序列名
+          sortOrder: params.order, //排位命令（desc，asc）
+
+          //查询框中的参数传递给后台
+          search_kw: $('#search-keyword').val(), // 请求时向服务端传递的参数
+        };
+        return query_params;
+      },
+
+
+
+      columns: [
+        {
+          checkbox: true  //第一列显示复选框
+        },
+
+        {
+          field: 'project_name',  //返回数据rows数组中的每个字典的键名与此处的field值要保持一致
+          title: '项目名'
+        },
+        {
+          field: 'project_code',
+          title: '项目编号'
+        },
+        {
+          field: 'version',
+          title: '版本'
+        },
+        {
+          field: 'department',
+          title: '业务部门'
+        },
+        {
+          field: 'tester',
+          title: '测试负责人'
+        },
+        {
+          field: 'document',
+          title: '测试文档'
+        },
+        {
+          field: 'release_time',
+          title: '上线时间'
+        },
+        {
+          field: 'status',
+          title: '状态',
+          formatter: project_status,
+        },
+        {
+          field: 'update_time',
+          title: '更新时间'
+        },
+        {
+          field: 'manager',
+          title: '项目经理'
+        },
+        {
+          field: 'operate',
+          title: '操作',
+          width: 120,
+          align: 'center',
+          valign: 'middle',
+          formatter: actionFormatter,
+        },
+
+      ],
+
+      onLoadSuccess: function (data) {
+        { #获取行数据的状态# }
+        console.log('渲染数据完成后，打印所有数据')
+        console.log(data);
+        { #获取所有列表数据# }
+        var data = $("#mytab").bootstrapTable("getData");
+        console.log('已获取全部数据%s', data);
+        { #根据每行数据的status值渲染开关# }
+        for (var i = 0; i < data.length; i++) {
+          console.log(data[i].project_code, data[i].status)
+          if (data[i].status == 1) {
+            console.log('这个是开启的')
+            $("[id='project_status_switch_on']").bootstrapSwitch({
+              onText: "启用",      // 设置ON文本  
+              offText: "禁用",    // 设置OFF文本  
+              onColor: "success",// 设置ON文本颜色(info/success/warning/danger/primary)  
+              offColor: "danger",  // 设置OFF文本颜色 (info/success/warning/danger/primary)  
+              size: "small",    // 设置控件大小,从小到大  (mini/small/normal/large)
+              // 当开关状态改变时触发  
+              onSwitchChange: function (event, state) {
+                console.log(state);
+                { #获取该行的project_code# }
+                var project_code = this.value;
+                console.log(project_code);
+                if (state == false) {
+                  status = 1
+                  { #alert("ON");# }
+                  console.log(status);
+                  set_status(project_code, status);
+                } else {
+                  status = 0
+                  { #alert("OFF");# }
+                  set_status(project_code, status);
+                }
+              }
+            })
+          } else {
+            console.log('这个是禁用的')
+            $("[id='project_status_switch_off']").bootstrapSwitch({
+              onText: "启用",      // 设置ON文本  
+              offText: "禁用",    // 设置OFF文本  
+              onColor: "success",// 设置ON文本颜色(info/success/warning/danger/primary)  
+              offColor: "danger",  // 设置OFF文本颜色 (info/success/warning/danger/primary)  
+              size: "small",    // 设置控件大小,从小到大  (mini/small/normal/large)
+              // 当开关状态改变时触发  
+              onSwitchChange: function (event, state) {
+                console.log(state);
+                { #获取该行的project_code# }
+                var project_code = this.value;
+                console.log(project_code);
+                if (state == false) {
+                  status = 1
+                  { #alert("ON");# }
+                  console.log(status);
+                  set_status(project_code, status);
+                } else {
+                  status = 0
+                  { #alert("OFF");# }
+                  set_status(project_code, status);
+                }
+              }
+            })
+          }
+        }
+      }
+    });
+
+
+  { #状态栏格式化, 根据该行数据的status的值控制checked属性是否选中# }
+  function project_status(value, row, index) {
+    var data = JSON.stringify(row); //获取该行数据
+    var data_json = JSON.parse(data);
+    console.log(data_json);
+    console.log('格式化最先被执行')
+    {
+      #for(var i = 0; i < data_json.length; i++) {# }
+      {#    console.log('第%s行的状态为%s', i, data_json.status);# }
+
+      if (data_json.status == 1) {
+        console.log('设置为开启')
+        return "<input value='" + data_json.project_code + "' type='checkbox' checked id='project_status_switch_on' name='mycheck'>";
+
+      } else {
+        console.log('设置为关闭')
+        return "<input value='" + data_json.project_code + "' type='checkbox'  id='project_status_switch_off' name='mycheck'>";
+      }
+    }
+    { #通过开关修改状态# }
+    function set_status(project_code, status) {
+      $.ajax({
+        type: 'POST',
+        dataType: 'json',
+        url: '/change_status/',
+        data: { 'project_code': project_code, 'status': status },
+        success: function (data) {
+          if (data.status == 'success') {
+            console.log(data)
+            { #alert('修改成功')# }
+          }
+
+        },
+        error: function () {
+          alert('修改失败');
+        }
+      })
+    }
+
+    //操作栏的格式化
+    function actionFormatter(value, row, index) {
+      var id = value;
+      var result = "";
+      result += "<a href='javascript:;' class='btn btn-xs green' onclick=\"EditViewById('" + id + "', view='view')\" title='查看'><span class='glyphicon glyphicon-search'></span></a>";
+      result += "<a href='javascript:;' class='btn btn-xs blue' onclick=\"EditViewById('" + id + "')\" title='编辑'><span class='glyphicon glyphicon-pencil'></span></a>";
+      result += "<a href='javascript:;' class='btn btn-xs red' onclick=\"DeleteByIds('" + id + "')\" title='删除'><span class='glyphicon glyphicon-remove'></span></a>";
+      return result;
+    }
+
+
+    // 搜索查询按钮触发事件
+    $(function () {
+      $("#search-button").click(function () {
+        $('#mytab').bootstrapTable(('refresh')); // 很重要的一步，刷新url！
+        $('#search-keyword').val()
+      })
+    })
+
+    //重置搜索条件
+    function clean() {
+      //先清空
+      $('#search-keyword').val('');
+      //清空后查询条件为空了，再次刷新页面，就是全部数据了
+      $('#mytab').bootstrapTable(('refresh')); // 很重要的一步，刷新url！
+    }
+
+</script>
+
+
+</html>

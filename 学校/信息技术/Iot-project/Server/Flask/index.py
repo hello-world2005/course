@@ -9,7 +9,6 @@ from wtforms.validators import DataRequired, EqualTo
 from flask_bootstrap import Bootstrap5
 import hashlib
 import time
-import json
 
 app = Flask(__name__)
 app.config['SESSION_KEY'] = os.urandom(8)
@@ -114,29 +113,41 @@ def Amp():
 @app.route('/fetchdata')
 def FetchData():
   filt = request.args.get('filter')
+  if (filt == None): return jsonify({})
   print('Fetch', filt)
   db = sqlite3.connect('data/data.sqlite')
   cur = db.cursor()
   cur.execute('select * from sensor where cata="%s"' % filt)
   sensor = cur.fetchall()
   data = []
+  res = {}
+  print(sensor)
   for i in sensor:
-    cur.execute('select * from data where sensorid="%s"' % i[0])
+    id, place = i[0], i[2]
+    cur.execute('select * from data where sensorid="%s"' % id)
     d = cur.fetchall()
-    for j in range(len(d)):
-      data.append({'id': d[j][0], 'val': d[j][1], 'time': d[j][2][-8:]})
-  if (len(data) == 0): return jsonify({})
-  if (len(data) > 10):
-    data = data[:-10]
-  _data = {}
-  x = 0
-  for i in data:
-    x += 1
-    _data[x] = i
+    if (len(d) > 10):
+      d = d[-10:]
+    _ = {}
+    _['name'] = place
+    _['data'] = []
+    for j in d:
+      _['data'].append(j[2])
+    data.append(_)
+  res['data'] = data
+  i = sensor[0]
+  cur.execute('select * from data where sensorid="%s"' % i[0])
+  d = cur.fetchall()
+  if (len(d) > 10):
+    d = d[-10:]
+  _ = []
+  for j in d:
+    _.append(j[3][5:-6])
+  res['time'] = _
   cur.close()
   db.close()
-  print(data)
-  return jsonify(_data)
+  return jsonify(res)
+  # return jsonify(_data)
 
 @app.route('/guest')
 def Guest():
@@ -155,6 +166,19 @@ def Guest():
   db.close()
   return jsonify(data)
 
+@app.route('/newguest')
+def NewGuest():
+  db = sqlite3.connect('data/data.sqlite')
+  cur = db.cursor()
+  name = request.args.get('name')
+  t = time.localtime()
+  ti = time.strftime('%Y-%m-%d %H:%M:%S', t)
+  cur.execute('insert into guest (name, timestamp) values ("%s", "%s")' % (name, ti))
+  db.commit()
+  cur.close()
+  db.close()
+  return 'success'
+
 @app.route('/control')
 def Control():
   if ('username' not in session):
@@ -163,18 +187,68 @@ def Control():
 
 @app.route('/windows')
 def Windows():
-  data = {}
+  data = []
   db = sqlite3.connect('data/data.sqlite')
   cur = db.cursor()
   cur.execute('select * from windows')
   _data = cur.fetchall()
+  qwq = {}
   x = 0
   for i in _data:
-    x += 1
-    data[x] = {'id': i[1], 'stat': i[2]}
+    qwq[i[1]] = i[2]
+  for i in qwq:
+    data.append({'place': i, 'status': qwq[i]})
   cur.close()
   db.close()
+  print(data)
   return jsonify(data)
+
+@app.route('/setwindow', methods = ['GET', 'POST'])
+def SetWindow():
+  if (request.method == 'GET'): return 'qwq'
+  name = request.form.get('name')
+  stat = request.form.get('stat')
+  db = sqlite3.connect('data/data.sqlite')
+  cur = db.cursor()
+  cur.execute('insert into windows (name, stat) values ("%s", %d)' % (name, int(stat)))
+  db.commit()
+  cur.close()
+  db.close()
+  return 'success'
+
+@app.route('/cron')
+def Cron():
+  id = request.args.get('id')
+  t = time.localtime()
+  ti = time.strftime('%Y-%m-%d %H:%M:%S', t)
+  db = sqlite3.connect('data/data.sqlite')
+  cur = db.cursor()
+  cur.execute('select cata from sensor where id=%s' % id)
+  data = cur.fetchall()
+  if (len(data) == 1):
+    cata = data[0]
+    if (cata == 'therometer' or cata == 'humidity'):
+      if (ti[-5:] == '01:00'): 
+        cur.close(); db.close()
+        return 'd'
+    else:
+      cur.close(); db.close()
+      return 'n'
+  cur.execute('select place from servo where id="%s"' % id)
+  data = cur.fetchall()
+  if (len(data) == 1):
+    pla = data[0]
+    cur.execute('select stat from windows where name="%s"' % pla)
+    data = cur.fetchall()
+    sta = data[-1]
+    if (sta == 0): 
+      cur.close(); db.close()
+      return 'O'
+    else: 
+      cur.close(); db.close()
+      return 'C'
+  cur.close(); db.close()
+  return ''
 
 if __name__ == '__main__':
   app.run(debug=True)

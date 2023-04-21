@@ -26,8 +26,6 @@
         $(function () {
           var x = [];
           var y = [];
-          var xtext = [];
-          var color = ["gray", "pink", "red", "blue", "yellow", "green", "#fff"];
           $.ajax({
             type: 'get',
             url: '/fetchdata',//请求数据的地址
@@ -35,17 +33,12 @@
               filter: 'therometer'
             },
             success: function (data) {
-              series = []
-              xAxis = []
-              $.each(data, function (i, v) {
-                series.push(parseInt(v.val))
-                xAxis.push(v.time)
-              })
-              high(xAxis, series)
+              console.log(data)
+              high(data.time, data.data)
             }
           });
-          function high(xAxis, series) {
-            console.log(xAxis, series)
+          function high(xAxis, data) {
+            console.log(xAxis, data)
             var chart = Highcharts.chart('container1', {
               title: {
                 text: 'Temperature'
@@ -63,10 +56,7 @@
               xAxis: {
                 categories: xAxis
               },
-              series: [{
-                name: '',
-                data: series,
-              }],
+              series: data
             });
           }
         });
@@ -87,17 +77,12 @@
               filter: 'humidity'
             },
             success: function (data) {
-              series = []
-              xAxis = []
-              $.each(data, function (i, v) {
-                series.push(parseInt(v.val))
-                xAxis.push(v.time)
-              })
-              high(xAxis, series)
+              console.log(data)
+              high(data.time, data.data)
             }
           });
           function high(xAxis, series) {
-            console.log(xAxis, series)
+            // console.log(xAxis, series)
             var chart = Highcharts.chart('container2', {
               title: {
                 text: 'Humidity'
@@ -115,10 +100,7 @@
               xAxis: {
                 categories: xAxis
               },
-              series: [{
-                name: '',
-                data: series,
-              }],
+              series: series
             });
           }
         });

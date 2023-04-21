@@ -22,6 +22,7 @@
   <link href="/static/bootstrap-table.min.css" rel="stylesheet">
   <div class="row">
     <div class="col">
+      <h2> 窗户 </h2>
       <table id="table"></table>
     </div>
   </div>
@@ -33,7 +34,82 @@
       striped: true,
       cache: false,
       sortable: true,
-    })
+      sortOrder: 'asc',
+
+      columns: [
+        {
+          field: 'place',
+          title: 'place'
+        },
+        {
+          field: 'status',
+          title: 'status',
+          formatter: Status
+        }
+      ],
+
+      onLoadSuccess: function(data) {
+        console.log(data)
+        for (var i = 0; i < data.length; i++) {
+          if (data[i].status == 0) {
+            $("[id='switch_on']").bootstrapSwitch({
+              onText: 'Close',
+              offText: 'Open',
+              onColor: 'danger',
+              offColor: 'success',
+              size: 'small',
+              onSwitchChange: function(event, state) {
+                var qwq = this.value;
+                if (state == false) {
+                  status = 0;
+                  setStatus(qwq, status);
+                } else {
+                  status = 1;
+                  setStatus(qwq, status);
+                }
+              }
+            })
+          } else {
+            $("[id='switch_off']").bootstrapSwitch({
+              onText: 'Close',
+              offText: 'Open',
+              onColor: 'danger',
+              offColor: 'success',
+              size: 'small',
+              onSwitchChange: function(event, state) {
+                var qwq = this.value;
+                console.log(qwq)
+                if (state == false) {
+                  status = 0;
+                  setStatus(qwq, status);
+                } else {
+                  status = 1;
+                  setStatus(qwq, status);
+                }
+              }
+            })
+          }
+        }
+      }
+    });
+    function Status(value, data, index) {
+      console.log(data)
+      if (data.status == 0) {
+        return "<input value='" + data.place + "' type='checkbox' id='switch_off' name='mycheck'>";
+      } else {
+        return "<input value='" + data.place + "' type='checkbox' id='switch_on' name='mycheck' checked>";
+      }
+    }
+    function setStatus(id, status) {
+      $.ajax({
+        type: 'POST',
+        url: '/setwindow',
+        data: {
+          'name': id,
+          'stat': status
+        }
+      })
+    }
   </script>
   {% endblock %}
 </body>
