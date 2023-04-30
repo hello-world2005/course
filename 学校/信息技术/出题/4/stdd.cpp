@@ -54,6 +54,7 @@ int work(int top,int tot){
 }
 int ask(int x,int l,int r){
     int i,t=sum[r]-(l==(x-1)*B+1?0:sum[l-1]);
+    // printf(">> %d\n", t);
     top=0;
     fo(i,(x-1)*B+1,min(x*B,n))
         if (b[i]<l) c[++top]=a[b[i]];
@@ -144,6 +145,7 @@ int main(){
         // printf("--%d %d\n", j, k);
         l=belong[j];r=belong[k];
         if (l==r){
+            // printf("%d %d %d\n", l, j, k);
             ans=ask(l,j,k);
             printf("%d\n",ans);
             continue;

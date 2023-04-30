@@ -12,12 +12,11 @@ int main() {
   int last_ans = 0;
   while (q--) {
     int ll, rr, ans = 0, l, r;
-    // scanf("%d%d", &ll, &rr);
-    scanf("%d%d", &l, &r);
-    // l = ll ^ last_ans;
-    // r = rr ^ last_ans;
-    // l = ll, r = rr;
-    // if (l > r) l ^= r ^= l ^= r;
+    scanf("%d%d", &ll, &rr);
+    ll = (ll ^ last_ans - 1 + n) % n + 1;
+    rr = (rr ^ last_ans - 1 + n) % n + 1;
+    if (ll > rr) ll ^= rr ^= ll ^= rr;
+    l = ll, r = rr;
     for (int i = l; i <= r; ++i)
       for (int j = i + 1; j <= r; ++j)
         if (a[i] > a[j]) ans += 1;

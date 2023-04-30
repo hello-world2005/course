@@ -5,8 +5,8 @@ import os
 # file = open('1.in', 'w')
 x = sys.argv[1]
 file = open('data/%s.in' % sys.argv[1], 'w')
-n = randint(40000, 40000)
-q = randint(10000, 10000)
+n = randint(10000, 10000)
+q = randint(20000, 20000)
 file.write(str(n) + ' ' + str(q) + '\n')
 a = [0] * n
 amax = int(1e9)
